@@ -1,0 +1,37 @@
+XTerm.faceName:     inconsolata
+XTerm.faceSize:     12
+XTerm.background:   gray16
+XTerm.foreground:   green
+XTerm.pointerColor: red
+XTerm.pointerColorBackground: gray15
+XTerm.cursorColor:  white
+XTerm.loginShell:   true
+XTerm.scrollBar:    true
+XTerm.scrollKey:    true
+XTerm.saveLines:    2048
+
+URxvt.font: 				xft:Anonymous Pro:size=12:antialias:true
+URxvt.letterSpace:			-1
+URxvt.scrollstyle: 			plain
+URxvt.savelines:			60000
+URxvt.borderLess:			false
+URxvt.depth:				32
+URxvt.background: 			rgba:0000/0000/0000/bbbb
+URxvt.foreground:			white
+URxvt.perl-ext-common: 		default,tabbed,vtwheel
+URxvt.urlLauncher: 			/usr/bin/firefox
+URxvt.matcher.button: 		1
+URxvt.keysym.M-u:			perl:url-select:select_next
+URxvt.underlineURLs:		true
+URxvt.buffered:				true
+
+
+Xft.dpi:			96
+Xft.antialias:		true
+Xft.rgba:			rgb
+Xft.hinting:		true
+Xft.hintstyle:		hintlight
+
+xpdf.antialias:		yes
+xpdf.enableFreetype:yes
+

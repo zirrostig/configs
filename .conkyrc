@@ -1,0 +1,11 @@
+background no
+out_to_console yes
+out_to_x no
+total_run_times 0
+update_interval 2.0
+use_spacer none
+use_xft yes
+double_buffer yes
+
+TEXT
+Now Playing: ${execi 3 cmus_nowplaying} ^fg(\#0000cd)::^fg() ^fg(\#cd0000)CPU: ${cpu}%^fg() ^fg(\#0000cd)::^fg() ^fg(\#32cd32)RAM: ${mem}^fg() ^fg(\#0000cd)::^fg() ${time %d %b %H:%M}
