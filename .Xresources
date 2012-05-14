@@ -28,9 +28,6 @@ URxvt.buffered:				true
 
 Xft.dpi:			96
 Xft.antialias:		true
-Xft.rgba:			rgb
-Xft.hinting:		true
-Xft.hintstyle:		hintlight
 
 xpdf.antialias:		yes
 xpdf.enableFreetype:yes
