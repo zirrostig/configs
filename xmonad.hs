@@ -337,9 +337,9 @@ myLayoutHook    = onWorkspace "web" layoutWeb $
 ------------------
 ---Layout Control--
 ------------------
-layoutWeb       = fullLayout ||| tiledLayout
+layoutWeb       = fullLayout ||| mosaicLayout ||| tiledLayout
 layoutIM        = gridIM (1%7) (ClassName "Pidgin")  --Make Buddy List stay on right
-layoutDefault   = tiledLayout ||| Mirror tiledLayout ||| mosaicLayout ||| fullLayout
+layoutDefault   = mosaicLayout ||| tiledLayout ||| Mirror tiledLayout ||| fullLayout
 
 ----------------------
 --Customized Layouts--

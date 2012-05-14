@@ -69,4 +69,3 @@ export PATH="/home/zirro/.cabal/bin:${PATH}"; #Cabal packages
 export EDITOR="vim";
 export BROWSER="firefox";
 export WINEARCH="win32";
-

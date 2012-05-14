@@ -19,16 +19,22 @@ map Q <Nop>
 imap <C-w> <Nop>
 "Space clears highlighting
 noremap <silent> <Space> :silent nohl<Bar>echo<CR>
+"MiddleClick paste doesn't get screwed up **No longer need to set paste**
+imap <MiddleMouse> "+p`]a
 
 "-> Files
 "   -> UndoFile - allows for a persistant undo between sessions
 set undofile
-set undodir=~/.vim/.undo
+set undodir=~/.vim_undo
 set nobackup
 
 "-> Appearance
 syntax on
-colorscheme wombat256
+"Improve zenburn's appearance
+let g:zenburn_old_Visual = 1
+let g:zenburn_alternate_Visual = 1
+let g:zenburn_high_Contrast = 1
+colorscheme tir_black
 "hi Normal ctermbg=NONE
 "209 = #e5786d
 hi Search term=NONE cterm=underline ctermfg=209 ctermbg=NONE
@@ -41,8 +47,8 @@ set showmatch
 autocmd InsertEnter * set number
 autocmd InsertLeave * set relativenumber
 
+"-> Setup wildmenu so that I can see my tab completion options
 set wildmenu
-"-> Make vim colorschemes work with Gnome-Terminal
 set wildmode=list:longest
 set wildchar=<Tab>
 
@@ -71,7 +77,7 @@ set virtualedit=onemore
 
 "-> Tab Key
 "   -> expandtab - use spaces inplace of tab characters, this setting will occasionally bite you in the ass
-set noexpandtab
+set expandtab
 set tabstop=4
 set shiftwidth=4
 set autoindent
@@ -94,8 +100,7 @@ augroup MUTT
   au BufRead ~/.mutt/temp/mutt* set spell
   au BufRead ~/.mutt/temp/mutt* nmap  <F1>  gqap
   au BufRead ~/.mutt/temp/mutt* nmap  <F2>  gqqj
-  au BufRead ~/.mutt/temp/mutt* nmap  <F3>  kgqj
-  au BufRead ~/.mutt/temp/mutt* map!  <F1>  <ESC>gqapi
+  au BufRead ~/.mutt/temp/mutt* nmap  <F3>  kgqj au BufRead ~/.mutt/temp/mutt* map!  <F1>  <ESC>gqapi
   au BufRead ~/.mutt/temp/mutt* map!  <F2>  <ESC>gqqji
   au BufRead ~/.mutt/temp/mutt* map!  <F3>  <ESC>kgqji
 augroup END
@@ -106,3 +111,24 @@ set guifont="Inconsolata Medium 9"
 "-> StatusLine
 set laststatus=2
 set statusline=%f%m%r%=%02.v\|%03.l/%03.L
+
+
+"-> Plugins Galore
+
+"-> Taglist
+let Tlist_Ctags_Cmd = "/usr/bin/ctags"
+let Tlist_WinWidth = 40
+noremap <F4> :TlistToggle<cr>
+noremap <F5> :TlistUpdate<cr>
+
+"-> Yankring
+let yankring_min_element_length = 2 "prevents the addition of single character deletes
+let yankring_window_auto_close=0
+let yankring_window_use_horiz=0
+let yankring_window_use_right=1
+let yankring_window_width=30
+let yankring_manual_clipboard_check=1 "Makes it check system clipboard for changes when running in terminal
+noremap <silent> <F2> :YRShow<CR>
+
+
+
