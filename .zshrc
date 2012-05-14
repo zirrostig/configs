@@ -44,6 +44,9 @@ setopt HIST_REDUCE_BLANKS
 setopt APPEND_HISTORY       #Good for running multiple zsh sessions simultaneously
 setopt BANG_HIST
 
+###Zsh Specials
+autoload -U zmv
+
 ### Keyboard Input Settings
 #bindkey -v                                      #Vim keybindings
 #Fix some keys to work as I expect them to
@@ -57,15 +60,24 @@ alias ll='ls -l'
 alias la='ls -la'
 alias allcolors='(x=`tput op` y=`printf %80s`;for i in {0..255};do o=00$i;echo -e ${o:${#o}-3:3} `tput setaf $i;tput setab $i`${y// /=}$x;done)'
 alias killFlash='~/.killFlash.sh'
+alias connectToSimon='ssh -Nfq -L 2676:simon.mines.edu:22 zstigall@imagine.mines.edu'
 
 ###Path Additions
+#Perl Crap
 export PERL_LOCAL_LIB_ROOT="/home/zirro/perl5";
 export PERL_MB_OPT="--install_base /home/zirro/perl5";
 export PERL_MM_OPT="INSTALL_BASE=/home/zirro/perl5";
 export PERL5LIB="/home/zirro/perl5/lib/perl5/x86_64-linux-thread-multi:/home/zirro/perl5/lib/perl5";
 export PATH="/home/zirro/perl5/bin:$PATH";
-export PATH="${PATH}:/home/zirro/ap/android-sdk-linux/tools:/home/zirro/ap/android-sdk-linux/platform-tools";	#Android SDK
-export PATH="/home/zirro/.cabal/bin:${PATH}"; #Cabal packages
+
+#export PATH="${PATH}:/home/zirro/ap/android-sdk-linux/tools:/home/zirro/ap/android-sdk-linux/platform-tools";	#Android SDK
+#Cabal Packages
+export PATH="/home/zirro/.cabal/bin:${PATH}";
+
+#More Path
+export PATH="/home/zirro/app/bin:${PATH}";
+
+#Various Exports
 export EDITOR="vim";
 export BROWSER="firefox";
 export WINEARCH="win32";

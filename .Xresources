@@ -26,7 +26,6 @@ URxvt.underlineURLs:		true
 URxvt.buffered:				true
 
 
-Xft.dpi:			96
 Xft.antialias:		true
 
 xpdf.antialias:		yes
