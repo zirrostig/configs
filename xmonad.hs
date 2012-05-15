@@ -35,7 +35,6 @@ import XMonad.Util.Run
 import XMonad.Util.EZConfig
 import XMonad.Util.NamedScratchpad
 
-
 import Graphics.X11.ExtraTypes.XF86
 
 import System.IO
@@ -54,8 +53,8 @@ import qualified XMonad.Util.ExtensibleState as XS
 myModKey        = mod1Mask -- Alt/Default for xmonad --mod4Mask -- Windows/Command
 myTerminal      = "urxvtc"
 myWebBrowser    = "firefox"
-myStatus_dzen   = "dzen2 -w 960 -h 20 -ta l" ++ myDzenOpts
-myStatus_conky  = "conky | dzen2 -x 960 -w 960 -h 20 -ta r" ++ myDzenOpts
+myStatusDzen   = "dzen2 -w 960 -h 20 -ta l" ++ myDzenOpts
+myStatusConky  = "conky | dzen2 -x 960 -w 960 -h 20 -ta r" ++ myDzenOpts
 
 ----------------------
 --Colors, Fonts, Etc--
@@ -355,7 +354,7 @@ myLogHook pipe = defaultPP
   { ppOutput          = hPutStrLn pipe
   , ppCurrent         = dzenColor "green" "" . pad . wrap "»" "«" . myTopicsToAbbrev
   , ppHidden          = dzenColor "lightgrey" "" . pad . wrap "." "" . myTopicsToAbbrev
-  , ppHiddenNoWindows = \ws -> if ws `notElem` myStaticTopics then "" else dzenColor "darkgrey" "" $ pad $ myTopicsToAbbrev $ ws
+  , ppHiddenNoWindows = \ws -> if ws `notElem` myStaticTopics then "" else dzenColor "darkgrey" "" $ pad $ myTopicsToAbbrev ws
   , ppUrgent          = dzenColor "red" "yellow" . pad . myTopicsToAbbrev
   , ppWsSep           = "∙"
   , ppSep             = ""
@@ -376,8 +375,8 @@ myLogHook pipe = defaultPP
 --The actual config--
 ---------------------
 main = do
-    dzenStatusBar   <- spawnPipe myStatus_dzen
-    conkyStatusBar  <- spawnPipe myStatus_conky
+    dzenStatusBar   <- spawnPipe myStatusDzen
+    conkyStatusBar  <- spawnPipe myStatusConky
     -- startupApps
     xmonad $ withUrgencyHook NoUrgencyHook $ defaultConfig
         { startupHook     = startupApps

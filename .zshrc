@@ -61,6 +61,7 @@ alias la='ls -la'
 alias allcolors='(x=`tput op` y=`printf %80s`;for i in {0..255};do o=00$i;echo -e ${o:${#o}-3:3} `tput setaf $i;tput setab $i`${y// /=}$x;done)'
 alias killFlash='~/.killFlash.sh'
 alias connectToSimon='ssh -Nfq -L 2676:simon.mines.edu:22 zstigall@imagine.mines.edu'
+alias makeJavaWindowsWork='wmname LG3D'
 
 ###Path Additions
 #Perl Crap
