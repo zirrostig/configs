@@ -1,0 +1,15 @@
+urxvt.font: 				xft:Anonymous Pro:size=12:antialias:true
+urxvt.letterSpace:			0
+urxvt.scrollstyle: 			plain
+urxvt.secondaryScroll:      true
+urxvt.savelines:			60000
+urxvt.borderLess:			false
+urxvt.depth:				32
+urxvt.background: 			rgba:0000/0000/0000/bbbb
+urxvt.foreground:			white
+urxvt.perl-ext-common: 		default,tabbed,vtwheel
+urxvt.urlLauncher: 			/usr/bin/firefox
+urxvt.matcher.button: 		1
+urxvt.keysym.M-u:			perl:url-select:select_next
+urxvt.underlineURLs:		true
+urxvt.buffered:				true
