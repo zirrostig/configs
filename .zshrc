@@ -53,6 +53,18 @@ autoload -U zmv
 # Keybindings
 bindkey '[3~' delete-char            #Forward Delete Key
 bindkey '^r' history-incremental-search-backward   #^r now works - history search
+bindkey '^[l' push-line
+
+rationalise-dot() {
+    if [[ $LBUFFER = *..  ]]; then
+        LBUFFER+=/..
+    else
+        LBUFFER+=.
+    fi
+
+}
+zle -N rationalise-dot
+bindkey . rationalise-dot
 
 ###Aliases
 alias ls='ls --color=auto'
