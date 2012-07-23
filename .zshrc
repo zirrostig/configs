@@ -88,7 +88,7 @@ export PATH="/home/zirro/perl5/bin:$PATH";
 export PATH="/home/zirro/.cabal/bin:${PATH}";
 
 #More Path
-export PATH="/home/zirro/app/bin:${PATH}";
+#export PATH="/home/zirro/app/bin:${PATH}";
 
 #Various Exports
 export EDITOR="vim";
