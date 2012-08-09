@@ -4,12 +4,9 @@ import XMonad.Actions.CopyWindow (copy)
 import XMonad.Actions.CycleWS
 import XMonad.Actions.DwmPromote
 import XMonad.Actions.DynamicWorkspaces
-import XMonad.Actions.FloatSnap
 import XMonad.Actions.GridSelect
-import XMonad.Actions.Plane
 import XMonad.Actions.Search
 import XMonad.Actions.Submap
-import XMonad.Actions.TopicSpace
 
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.InsertPosition
@@ -32,7 +29,6 @@ import XMonad.Prompt.Workspace
 import XMonad.Prompt.XMonad
 
 import XMonad.Util.Run
-import XMonad.Util.EZConfig
 import XMonad.Util.NamedScratchpad
 
 import Graphics.X11.ExtraTypes.XF86
@@ -50,11 +46,11 @@ import qualified XMonad.Util.ExtensibleState as XS
 ---------------------------------------
 --Default Settings for various things--
 ---------------------------------------
-myModKey        = mod1Mask -- Alt/Default for xmonad --mod4Mask -- Windows/Command
+myModKey        = mod4Mask -- Alt/Default for xmonad --mod4Mask -- Windows/Command
 myTerminal      = "urxvtc"
 myWebBrowser    = "firefox"
-myStatusDzen   = "dzen2 -w 960 -h 20 -ta l" ++ myDzenOpts
-myStatusConky  = "conky | dzen2 -x 960 -w 960 -h 20 -ta r" ++ myDzenOpts
+myStatusDzen    = "dzen2 -w 960 -h 20 -ta l" ++ myDzenOpts
+myStatusConky   = "conky | dzen2 -x 960 -w 960 -h 20 -ta r" ++ myDzenOpts
 
 ----------------------
 --Colors, Fonts, Etc--
@@ -78,7 +74,6 @@ myGSColorizer = colorRangeFromClassName
                    white            -- active fg
   where white = maxBound
 
-
 -------------------
 --Prompt Settings--
 -------------------
@@ -88,113 +83,103 @@ myXPConfig = greenXPConfig { font = "xft:DejaVu Serif:pixelsize=12:autohint=true
 ---------------------
 --Keyboard Bindings--
 ---------------------
-myKeys =  [
+myKeys conf = M.fromList $ [
+          --Mostly Defaults
+            ((myModKey .|. shiftMask, xK_Return                ), spawn $ XMonad.terminal conf                   )  -- launch a terminal
+          , ((myModKey .|. shiftMask, xK_c                     ), kill                                           )  -- close focused window
+          , ((myModKey              , xK_space                 ), sendMessage NextLayout                         )  -- Rotate through the available layout algorithms
+          , ((myModKey .|. shiftMask, xK_space                 ), setLayout $ XMonad.layoutHook conf             )  -- Reset the layouts on the current workspace to default
+          , ((myModKey              , xK_Tab                   ), windows W.focusDown                            )  -- Move focus to the next window
+          , ((myModKey .|. shiftMask, xK_Tab                   ), windows W.focusUp                              )  -- Move focus to the previous window
+          , ((myModKey              , xK_j                     ), windows W.focusDown                            )  -- Move focus to the next window
+          , ((myModKey              , xK_k                     ), windows W.focusUp                              )  -- Move focus to the previous window
+          , ((myModKey              , xK_m                     ), windows W.focusMaster                          )  -- Move focus to the master window
+          , ((myModKey              , xK_h                     ), sendMessage Shrink                             )  -- Shrink the master area
+          , ((myModKey              , xK_l                     ), sendMessage Expand                             )  -- Expand the master area
+          , ((myModKey              , xK_r                     ), rescreen)
+          , ((myModKey              , xK_t                     ), withFocused $ windows . W.sink                 )  -- Push window back into tiling
+          , ((myModKey              , xK_comma                 ), sendMessage (IncMasterN 1)                     )  -- Increment the number of windows in the master area
+          , ((myModKey              , xK_period                ), sendMessage (IncMasterN (-1))                  )  -- Deincrement the number of windows in the master area
+          , ((myModKey              , xK_p                     ), spawn "yeganesh_exec"                          )  -- Toggle yeganesh (dmenu but better) yeganesh_exec is a quick script $ eval `yeganesh -x`
           --Media
-            ((0, xF86XK_AudioRaiseVolume)         , spawn "amixer set Master 2%+" )
-          , ((0, xF86XK_AudioLowerVolume)         , spawn "amixer set Master 2%-" )
-          , ((0, xF86XK_AudioMute)                , spawn "amixer set Master toggle" )
-          , ((0, xF86XK_AudioPlay)                , safeSpawn "cmus-remote" ["-C", "player-pause"] )
-          , ((0, xF86XK_AudioNext)                , safeSpawn "cmus-remote" ["-C", "player-next"]  )
-          , ((0, xF86XK_AudioPrev)                , safeSpawn "cmus-remote" ["-C", "player-prev"]  )
-          , ((0, xF86XK_Eject)                    , spawn "eject -T")
-          --Hiding of Dock
-          , ((myModKey, xK_b)                     , sendMessage ToggleStruts)
-          --Binding to pydmenu, will switch to yeganesh/dmenu later
-          --, ((myModKey, xK_p)                     , spawn "pydmenu_run" )
+          , ((0                     , xF86XK_AudioRaiseVolume  ), spawn "amixer set Master 2%+"                  )  -- Raise Volume, TODO: make it work on current audio device
+          , ((0                     , xF86XK_AudioLowerVolume  ), spawn "amixer set Master 2%-"                  )  -- Lower Volume
+          , ((0                     , xF86XK_AudioMute         ), spawn "amixer set Master toggle"               )  -- Mute
+          , ((0                     , xF86XK_AudioPlay         ), safeSpawn "cmus-remote" ["-C", "player-pause"] )  -- CMus command, play/pause TODO: global media controls
+          , ((0                     , xF86XK_AudioNext         ), safeSpawn "cmus-remote" ["-C", "player-next"]  )  -- CMus command, next song
+          , ((0                     , xF86XK_AudioPrev         ), safeSpawn "cmus-remote" ["-C", "player-prev"]  )  -- CMus command, previous song
+          , ((0                     , xF86XK_Eject             ), spawn "eject -T"                               )  -- Eject/Retract CD Drive
+          --Hiding of stuff
+          , ((myModKey              , xK_b                     ), sendMessage ToggleStruts                       )  -- Hide Status Bars
           --Window Management
-          , ((myModKey, xK_Return)                , dwmpromote )
-          , ((myModKey, xK_Left)                  , prevWS )
-          , ((myModKey, xK_Right)                 , nextWS )
-          , ((myModKey .|. shiftMask, xK_Left)    , shiftToPrev >> prevWS )
-          , ((myModKey .|. shiftMask, xK_Right)   , shiftToNext >> nextWS )
-          , ((myModKey .|. controlMask, xK_Left)  , prevScreen )
-          , ((myModKey .|. controlMask, xK_Right) , nextScreen )
-          , ((myModKey .|. shiftMask .|. controlMask, xK_Left) , shiftPrevScreen )
-          , ((myModKey .|. shiftMask .|. controlMask, xK_Right), shiftNextScreen )
+          , ((myModKey              , xK_Return                ), dwmpromote                                     )  -- Swaps Master and current (top of slave stack)
+          , ((myModKey              , xK_Left                  ), prevWS                                         )  -- Moves focus to the workspace to the left
+          , ((myModKey              , xK_Right                 ), nextWS                                         )  -- Moves focus to the workspace to the right
+          , ((myModKey .|. shiftMask, xK_Left                  ), shiftToPrev >> prevWS                          )  -- Move focused window to workspace to the left
+          , ((myModKey .|. shiftMask, xK_Right                 ), shiftToNext >> nextWS                          )  -- Move focused window to workspace to the right
+          , ((myModKey .|. controlMask              , xK_Left  ), prevScreen                                     )  -- Moves focus to the screen on the left
+          , ((myModKey .|. controlMask              , xK_Right ), nextScreen                                     )  -- Moves focus to the screen on the right
+          , ((myModKey .|. shiftMask .|. controlMask, xK_Left  ), shiftPrevScreen                                )  -- Moves focused window to the screen on the left
+          , ((myModKey .|. shiftMask .|. controlMask, xK_Right ), shiftNextScreen                                )  -- Moves focused window to the screen on the right
           --Dynamic Workspaces
-          , ((myModKey .|. shiftMask, xK_Up   )   , addWorkspacePrompt myXPConfig)
-          , ((myModKey .|. shiftMask, xK_Down )   , removeWorkspace)
+          , ((myModKey .|. shiftMask, xK_Up                    ), addWorkspacePrompt myXPConfig                  )  -- Prompts for a new workspace name, creates workspace
+          , ((myModKey .|. shiftMask, xK_Down                  ), removeWorkspace                                )  -- Deletes current workspace,
           --MosaicAlt Controls
-          , ((myModKey .|. shiftMask, xK_h    )   , withFocused (sendMessage . expandWindowAlt))
-          , ((myModKey .|. shiftMask, xK_l    )   , withFocused (sendMessage . shrinkWindowAlt))
-          , ((myModKey .|. shiftMask, xK_j    )   , withFocused (sendMessage . tallWindowAlt))
-          , ((myModKey .|. shiftMask, xK_k    )   , withFocused (sendMessage . wideWindowAlt))
-          , ((myModKey .|. controlMask, xK_space) , sendMessage resetAlt)
+          , ((myModKey .|. shiftMask, xK_h                     ), withFocused (sendMessage . expandWindowAlt)    )  -- (Mosaic Layout) Increases focused window's size
+          , ((myModKey .|. shiftMask, xK_l                     ), withFocused (sendMessage . shrinkWindowAlt)    )  -- (Mosaic Layout) Decreases focused window's size
+          , ((myModKey .|. shiftMask, xK_j                     ), withFocused (sendMessage . tallWindowAlt)      )
+          , ((myModKey .|. shiftMask, xK_k                     ), withFocused (sendMessage . wideWindowAlt)      )
+          , ((myModKey .|. controlMask, xK_space               ), sendMessage resetAlt)
+          --Lock Computer
+          , ((myModKey .|. shiftMask, xK_z                     ), spawn "xlock +mousemotion"                     )  -- Locks screen with xlock (xlockmore)
+          --Restarting/Closing XMonad
+          , ((myModKey .|. shiftMask, xK_apostrophe            ), io (exitWith ExitSuccess)                      )  -- Quits XMonad
+          , ((myModKey              , xK_apostrophe            ), spawn "if type xmonad; then xmonad --recompile; xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")  -- Restarts XMonad
           --GridSelect Controls
-          , ((myModKey, xK_g), submap . M.fromList $
-              [ ((0, xK_g)        , goToSelected $ gsconfig2 myGSColorizer)
-              , ((shiftMask, xK_g), bringSelected $ gsconfig2 myGSColorizer)
-              , ((0, xK_p)        , spawnSelected defaultGSConfig myGSApps)
-              , ((0, xK_w)        , promptedGotoGrid)
+          , ((myModKey              , xK_g                     ), submap . M.fromList $
+              [ ((0             , xK_g    ), goToSelected $ gsconfig2 myGSColorizer                              )  -- Displays grid of running apps, select one to go to it
+              , ((shiftMask     , xK_g    ), bringSelected $ gsconfig2 myGSColorizer                             )  -- Displays grid of running apps, select one to pull it to current workspace
+              , ((0             , xK_p    ), spawnSelected defaultGSConfig myGSApps                              )  -- Displays grid of favorite apps, select one to start it
               ])
           --Prompts
-          , ((myModKey, xK_s), submap . M.fromList $
-              [ ((0, xK_a), promptSearch myXPConfig amazon)
-              , ((0, xK_h), promptSearch myXPConfig hoogle)
-              , ((0, xK_s), promptSearch myXPConfig google)
-              , ((0, xK_t), appendFilePrompt myXPConfig "/home/zirro/doc/notes/todo.txt")
-              , ((0, xK_w), promptSearch myXPConfig wikipedia)
-              , ((0, xK_x), xmonadPrompt myXPConfig)
-              , ((9, xK_m), manPrompt  myXPConfig)
-              , ((controlMask, xK_s), sshPrompt myXPConfig)
+          , ((myModKey              , xK_s                     ), submap . M.fromList $
+              [ ((0             , xK_a    ), promptSearch myXPConfig amazon                                      )  -- Prompts for amazon search
+              , ((0             , xK_h    ), promptSearch myXPConfig hoogle                                      )  -- Prompts for hoogle search TODO: modify to open terminal with hoogle results
+              , ((0             , xK_s    ), promptSearch myXPConfig google                                      )  -- Prompts for google search
+              , ((0             , xK_t    ), appendFilePrompt myXPConfig "/home/zirro/doc/notes/todo.txt"        )  -- Prompts for quick todo note
+              , ((0             , xK_w    ), promptSearch myXPConfig wikipedia                                   )  -- Prompts for wikipedia search
+              , ((0             , xK_x    ), xmonadPrompt myXPConfig                                             )  -- XMonad basic command entry
+              , ((controlMask   , xK_s    ), sshPrompt myXPConfig                                                )  -- Starts a new ssh session with prompt
               ])
           --Scratchpads
-          , ((myModKey, xK_n), submap .M.fromList $
-              [ ((0, xK_l), namedScratchpadAction scratchpads "htop")
-              , ((0, xK_d), namedScratchpadAction scratchpads "stardict")
-              , ((0, xK_h), namedScratchpadAction scratchpads "haskell")
-              , ((0, xK_n), namedScratchpadAction scratchpads "notes")
-              , ((0, xK_p), namedScratchpadAction scratchpads "python")
+          , ((myModKey              , xK_n                     ), submap .M.fromList  $
+              [ ((0             , xK_l    ), namedScratchpadAction scratchpads "htop"                            )  -- Opens htop in a temporary window
+              , ((0             , xK_d    ), namedScratchpadAction scratchpads "stardict"                        )  -- Opens stardict
+              , ((0             , xK_h    ), namedScratchpadAction scratchpads "haskell"                         )  -- Opens ghci
+              , ((0             , xK_n    ), namedScratchpadAction scratchpads "notes"                           )  -- Opens vim on a note file
+              , ((0             , xK_p    ), namedScratchpadAction scratchpads "python"                          )  -- Opens python intrepter
               ])
-          --TopicSpaces
-          , ((myModKey, xK_t), submap . M.fromList $
-              [ ((0, xK_n)        , spawnShell)
-              , ((0, xK_t)        , currentTopicAction myTopicConfig)
-              , ((0, xK_g)        , workspacePrompt myXPConfig goto)
-              , ((shiftMask, xK_g), workspacePrompt myXPConfig $ windows . W.shift)
-              ])
-          --Lock Computer
-          , ((myModKey .|. shiftMask, xK_z)       , spawn "xscreensaver-command -lock")
-          --Restarting/Closing XMonad
-          , ((myModKey .|. shiftMask, xK_apostrophe), io (exitWith ExitSuccess))
-          , ((myModKey, xK_apostrophe), spawn "if type xmonad; then xmonad --recompile; xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")
-          --Start Enlightenment on top of current session
-          , ((myModKey .|. controlMask, xK_apostrophe), restart "e17toxmd" False)
+          ] ++ [
+          -- mod-[1..9], Switch to workspace N
+          -- mod-shift-[1..9], Move client to workspace N
+          ((m .|. myModKey, k), windows $ f i)                              --Taken from the defaultConfig,
+              | (i, k) <- zip (workspaces conf) (xK_grave:[xK_1 .. xK_9])   --Added the ` key, aka xK_grave
+              , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
+          ] ++ [
+          -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
+          -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
+          ((m .|. myModKey, key), screenWorkspace sc >>= flip whenJust (windows . f)) --Taken from the defaultConfig
+              | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
+              , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
           ]
---          ++
---          [ ((myModKey, k), switchNthLastFocused myTopicConfig i)
---          | (i, k) <- zip [1..] workspaceKeys
---          ]
---          ++
---          zip (zip (repeat (myModKey)) [xK_1..xK_9]) (map (withNthWorkspace W.greedyView) [0..])
---          ++
---          zip (zip (repeat (myModKey .|. shiftMask)) [xK_1..xK_9]) (map (withNthWorkspace W.shift) [0..])
 
 ------------------------------------------------
 --Default Application Startup, Dock is in main--
------------------------------------------------- 
+------------------------------------------------
 startupApps     = do
-    safeSpawnProg "urxvtc"
-    safeSpawn "xcompmgr" ["-f", "-I", ".075", "-O", ".075", "-D", "10", "-c", "-r", "20", "-o", ".8", "-C"]
-    safeSpawnProg "xcape"  --Keyboard Daemon, intercepts Control, and sends Escape on short presses of Control, otherwise sends Control
-    safeSpawn "dropbox_cli" ["start"]
-    safeSpawnProg "xscreensaver"
     safeSpawnProg "urxvtd"              --Daemon running my terminals, reduces resource usage and improves preformance
-    safeSpawnProg "pidgin"
-    safeSpawnProg "firefox"
-    safeSpawnProg "spotify"
-    safeSpawnProg "xcape"
---    safeSpawnProg "xchat"
---    safeSpawn "trayer" [ "--edge", "top"    --This is my System Tray
---                       , "--align", "right"
---                       , "--widthtype", "percent"
---                       , "--width", "5"
---                       , "--height", "21"
---                       , "--expand", "false"
---                       , "--transparent", "true"
---                       , "--alpha", "0"
---                       , "--tint", "0x000000"
---                       ]
+    safeSpawnProg "urxvtc"
+    safeSpawnProg "xcape"  --Keyboard Daemon, intercepts Control, and sends Escape on short presses of Control, otherwise sends Control
 
 ---------------
 --Scratchpads--
@@ -206,109 +191,37 @@ scratchpads = [ NS "htop" "urxvtc -e htop" (title =? "sp_htop") defaultFloating
               , NS "haskell" "urxvtc -e ghci" (title =? "sp_haskell") defaultFloating
               ] where role = stringProperty "WM_WINDOW_ROLE"
 
-----------------
---Topic Spaces--
-----------------
-myTopics :: [Topic]
-myTopics =  [ "dashboard"
-            , "web"
-            , "notes"
-            , "im"
-            , "irc"
-            , "mail"
-            , "music"
-            , "video"
-            , "python"
-            , "haskell"
-            , "android"
-            , "java"
-            , "development"
-            , "pdf"
-            , "school"
-            , "documents"
-            , "wine"
-            ]
 
---List of topics that should always be visible
-myStaticTopics :: [Topic]
-myStaticTopics =  [ "dashboard"
-                  , "web"
-                  , "notes"
-                  , "im"
-                  , "irc"
-                  , "mail"
-                  , "music"
-                  ]
 
-myTopicsToAbbrev ab = case ab of
-  "dashboard"   -> "dash"
-  "music"       -> "mus"
-  "video"       -> "vid"
-  "python"      -> "py"
-  "haskell"     -> "hs"
-  "android"     -> "droid"
-  "development" -> "dev"
-  "school"      -> "csm"
-  "documents"   -> "doc"
-  _             -> ab
+--------------
+--Workspaces--
+--------------
 
-myTopicConfig :: TopicConfig
-myTopicConfig = defaultTopicConfig
-  { topicDirs = M.fromList $
-    [ ("dashboard"  , "~/")
-    , ("notes"      , "~/doc/notes")
-    , ("web"        , "~/dl")
-    , ("im"         , "~/")
-    , ("irc"        , "~/")
-    , ("mail"       , "~/")
-    , ("music"      , "~/mm/mus")
-    , ("video"      , "~/mm/mov")
-    , ("python"     , "~/sc/py")
-    , ("haskell"    , "~/sc/hs")
-    , ("android"    , "~/")
-    , ("java"       , "~/Eclipse")
-    , ("development", "~/sc")
-    , ("pdf"        , "~/")
-    , ("school"     , "~/csm/s12")
-    , ("documents"  , "~/")
-    , ("wine"       , "~/.wine")
-    ]
-  , defaultTopicAction = const $ spawnShell >*> 3
-  , defaultTopic = "dashboard"
-  , topicActions = M.fromList $
-    [ ("dashboard", spawnShell)
-    , ("notes"    , spawnInShell "vim ~/doc/notes/notes.txt")
-    , ("web"      , spawn myWebBrowser)
-    , ("im"       , spawn "pidgin")
-    , ("irc"      , spawn "xchat")
-    , ("mail"     , spawnInShell "mutt")
-    , ("music"    , spawn "spotify" >> spawnInShell "cmus")
-    , ("video"    , spawnShell)
-    , ("python"   , spawnShell >*> 2 >> spawnInShell "bpython")
-    , ("haskell"  , spawnShell >*> 2 >> spawnInShell "ghci")
-    , ("android"  , spawnShell >*> 2)
-    , ("java"     , spawnShell >*> 2)
-    , ("pdf"      , spawnShell)
-    , ("school"   , spawnShell >*> 2)
-    , ("documents", spawnShell)
-    , ("wine"     , spawnShell)
-    ]
-  }
+myWorkspaces = [ "dashboard"
+               , "terminal"
+               , "web"
+               , "messaging"
+               , "media"
+               , "temporary"
+               ]
 
-spawnShell :: X ()
-spawnShell = currentTopicDir myTopicConfig >>= spawnShellIn
+myWSstatic =   [ "terminal"
+               , "web"
+               , "messaging"
+               , "media"
+               ]
 
-spawnShellIn :: Dir -> X ()
-spawnShellIn dir = spawn $ "urxvtc -cd " ++ dir
+myWSnever =    [ "dashboard"
+               ]
 
-spawnInShell :: String -> X ()
-spawnInShell app = spawn $ "urxvtc -e " ++ app
+myWSabbrev ws = case ws of
+  "dashboard" -> "dash"
+  "terminal"  -> "term"
+  "messaging" -> "msg"
+  "media"     -> "mm"
+  "temporary" -> "temp"
+  _           -> ws
 
-goto :: Topic -> X ()
-goto = switchTopic myTopicConfig
-
-wsGrid = gridselect defaultGSConfig <=< asks $ map (\x -> (x,x)) . workspaces . config
-promptedGotoGrid = wsGrid >>= flip whenJust (switchTopic myTopicConfig)
 
 ---------------
 --Manage Hook--
@@ -317,12 +230,12 @@ myManageHook    = composeAll
     [ className =? "Firefox"            --> doShift "web"
     , className =? "Iceweasel"          --> doShift "web"
     , className =? "Chromium"           --> doShift "web"
-    , className =? "Pidgin"             --> insertPosition End Older <+> doShift "im"
-    , className =? "xchat"              --> doShift "irc"
+    , className =? "Pidgin"             --> insertPosition End Older <+> doShift "messaging"
+    , className =? "xchat"              --> doShift "messaging"
     , className =? "Gimp"               --> doFloat             --Lets Gimp Windows Float by default
     , title     =? "pinentry"           --> doFloat
     , className =? "MPlayer"            --> doFloat             --MPlayer windows don't get docked
-    , className =? "Spotify"            --> doShift "music"
+    , className =? "Spotify"            --> doShift "media"
     , isFullscreen                      --> doFullFloat         --Good catch all for full screen video, smartBorders is also used on the layoutHook
     ]
 
@@ -333,9 +246,9 @@ myLayoutHook    = onWorkspace "web" layoutWeb $
                   onWorkspace "im"  layoutIM $
                   layoutDefault
 
-------------------
+-------------------
 ---Layout Control--
-------------------
+-------------------
 layoutWeb       = fullLayout ||| mosaicLayout ||| tiledLayout
 layoutIM        = gridIM (1%7) (ClassName "Pidgin")  --Make Buddy List stay on right
 layoutDefault   = mosaicLayout ||| tiledLayout ||| Mirror tiledLayout ||| fullLayout
@@ -352,10 +265,14 @@ mosaicLayout    = MosaicAlt M.empty
 --------------------------------
 myLogHook pipe = defaultPP
   { ppOutput          = hPutStrLn pipe
-  , ppCurrent         = dzenColor "green" "" . pad . wrap "»" "«" . myTopicsToAbbrev
-  , ppHidden          = dzenColor "lightgrey" "" . pad . wrap "." "" . myTopicsToAbbrev
-  , ppHiddenNoWindows = \ws -> if ws `notElem` myStaticTopics then "" else dzenColor "darkgrey" "" $ pad $ myTopicsToAbbrev ws
-  , ppUrgent          = dzenColor "red" "yellow" . pad . myTopicsToAbbrev
+  , ppCurrent         = dzenColor "green" "" . pad . wrap "»" "«" . myWSabbrev
+  , ppHidden          = \ws -> if ws `elem` myWSnever
+                                then ""
+                                else dzenColor "lightgrey" "" $ pad $ wrap "." "" $ myWSabbrev ws
+  , ppHiddenNoWindows = \ws -> if ws `notElem` myWSstatic
+                                then ""
+                                else dzenColor "darkgrey" "" $ pad $ myWSabbrev ws
+  , ppUrgent          = dzenColor "red" "yellow" . pad . myWSabbrev
   , ppWsSep           = "∙"
   , ppSep             = ""
   , ppVisible         = wrap "[" "]"
@@ -379,13 +296,14 @@ main = do
     conkyStatusBar  <- spawnPipe myStatusConky
     -- startupApps
     xmonad $ withUrgencyHook NoUrgencyHook $ defaultConfig
-        { startupHook     = startupApps
-        , workspaces      = myTopics
+        {
+          terminal        = myTerminal
         , modMask         = myModKey
-        , terminal        = myTerminal
-        , manageHook      = myManageHook <+> manageDocks
+        , workspaces      = myWorkspaces
+        , keys            = myKeys
         , layoutHook      = avoidStruts $ smartBorders $ myLayoutHook     -- smartBorders removes borders if only one window or a fullscreen floating window is up
+        , manageHook      = myManageHook <+> manageDocks
         , handleEventHook = docksEventHook
         , logHook         = dynamicLogWithPP $ myLogHook dzenStatusBar
+        , startupHook     = return () >> startupApps
         }
-        `additionalKeys` myKeys
