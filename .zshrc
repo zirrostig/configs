@@ -88,6 +88,7 @@ export PATH="/home/zirro/perl5/bin:$PATH";
 export PATH="/home/zirro/.cabal/bin:${PATH}";
 
 #More Path
+export PATH="${PATH}:/home/zirro/.gem/ruby/1.9.1/bin:/home/zirro/.gem/ruby/1.8/bin"
 export PATH="/home/zirro/app/bin:${PATH}";
 
 #Various Exports
