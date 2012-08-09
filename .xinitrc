@@ -5,7 +5,7 @@
 
 xrdb -merge ~/.Xresources
 
-~/.wallpapers.sh &
+#~/.wallpapers.sh &
 
 #xcompmgr -f -I .075 -O .075 -D 10 -c -r 20 -o .8 -C
 
@@ -22,6 +22,8 @@ fi
 #else exec $1
 #fi
 
+#Add xmonad to the path
+export PATH="/home/zirro/.cabal/bin:${PATH}"
 
 exec $1
 #exec xmonad
