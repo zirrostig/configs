@@ -22,6 +22,8 @@ fi
 #else exec $1
 #fi
 
+#Add xmonad to path
+export PATH="/home/zirro/.cabal/bin:${PATH}"
 
 exec $1
 #exec xmonad
