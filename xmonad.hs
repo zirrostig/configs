@@ -221,6 +221,7 @@ scratchpads = [ NS "htop" "urxvtc -e htop" (title =? "sp_htop") defaultFloating
 myTopics :: [Topic]
 myTopics =  [ "dashboard"
             , "web"
+            , "minecraft"
             , "notes"
             , "im"
             , "irc"
@@ -236,13 +237,13 @@ myTopics =  [ "dashboard"
             , "school"
             , "documents"
             , "wine"
-            , "minecraft"
             ]
 
 --List of topics that should always be visible
 myStaticTopics :: [Topic]
 myStaticTopics =  [ "dashboard"
                   , "web"
+                  , "minecraft"
                   , "notes"
                   , "im"
                   , "irc"
@@ -252,6 +253,7 @@ myStaticTopics =  [ "dashboard"
 
 myTopicsToAbbrev ab = case ab of
   "dashboard"   -> "dash"
+  "minecraft"   -> "mc"
   "music"       -> "mus"
   "video"       -> "vid"
   "python"      -> "py"
@@ -260,13 +262,13 @@ myTopicsToAbbrev ab = case ab of
   "development" -> "dev"
   "school"      -> "csm"
   "documents"   -> "doc"
-  "minecraft"   -> "mc"
   _             -> ab
 
 myTopicConfig :: TopicConfig
 myTopicConfig = defaultTopicConfig
   { topicDirs = M.fromList $
     [ ("dashboard"  , "~/")
+    , ("minecraft"  , "~/.minecraft")
     , ("notes"      , "~/doc/notes")
     , ("web"        , "~/dl")
     , ("im"         , "~/")
@@ -283,7 +285,6 @@ myTopicConfig = defaultTopicConfig
     , ("school"     , "~/csm/s12")
     , ("documents"  , "~/")
     , ("wine"       , "~/.wine")
-    , ("minecraft"  , "~/.minecraft")
     ]
   , defaultTopicAction = const $ spawnShell >*> 3
   , defaultTopic = "dashboard"
@@ -336,7 +337,7 @@ myManageHook    = composeAll
     , title     =? "pinentry"                    --> doFloat
     , className =? "MPlayer"                     --> doFloat             --MPlayer windows don't get docked
     , className =? "Spotify"                     --> doShift "music"
-    , className =? "net-minecraft-LauncherFrame" --> doShift "minecraft" <+> doFloat
+    , className =? "net-minecraft-LauncherFrame" --> doShift "minecraft"
     , isFullscreen                               --> doFullFloat         --Good catch all for full screen video, smartBorders is also used on the layoutHook
     ]
 
