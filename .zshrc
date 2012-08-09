@@ -81,11 +81,11 @@ export PERL_LOCAL_LIB_ROOT="/home/zirro/perl5";
 export PERL_MB_OPT="--install_base /home/zirro/perl5";
 export PERL_MM_OPT="INSTALL_BASE=/home/zirro/perl5";
 export PERL5LIB="/home/zirro/perl5/lib/perl5/x86_64-linux-thread-multi:/home/zirro/perl5/lib/perl5";
-export PATH="/home/zirro/perl5/bin:$PATH";
+#export PATH="/home/zirro/perl5/bin:$PATH";
 
 #export PATH="${PATH}:/home/zirro/ap/android-sdk-linux/tools:/home/zirro/ap/android-sdk-linux/platform-tools";	#Android SDK
 #Cabal Packages
-export PATH="/home/zirro/.cabal/bin:${PATH}";
+#export PATH="/home/zirro/.cabal/bin:${PATH}";
 
 #More Path
 #export PATH="/home/zirro/app/bin:${PATH}";
