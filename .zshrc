@@ -88,7 +88,8 @@ export PERL5LIB="/home/zirro/perl5/lib/perl5/x86_64-linux-thread-multi:/home/zir
 #export PATH="/home/zirro/.cabal/bin:${PATH}";
 
 #More Path
-#export PATH="/home/zirro/app/bin:${PATH}";
+export PATH="${PATH}:/home/zirro/.gem/ruby/1.9.1/bin:/home/zirro/.gem/ruby/1.8/bin"
+export PATH="/home/zirro/app/bin:${PATH}";
 
 #Various Exports
 export EDITOR="vim";

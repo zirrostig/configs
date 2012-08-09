@@ -5,7 +5,7 @@
 
 xrdb -merge ~/.Xresources
 
-~/.wallpapers.sh &
+#~/.wallpapers.sh &
 
 #xcompmgr -f -I .075 -O .075 -D 10 -c -r 20 -o .8 -C
 

@@ -50,11 +50,12 @@ import qualified XMonad.Util.ExtensibleState as XS
 ---------------------------------------
 --Default Settings for various things--
 ---------------------------------------
-myModKey        = mod1Mask -- Alt/Default for xmonad --mod4Mask -- Windows/Command
-myTerminal      = "urxvtc"
-myWebBrowser    = "firefox"
-myStatusDzen   = "dzen2 -w 960 -h 20 -ta l" ++ myDzenOpts
-myStatusConky  = "conky | dzen2 -x 960 -w 960 -h 20 -ta r" ++ myDzenOpts
+myModKey            = mod1Mask -- Alt/Default for xmonad --mod4Mask -- Windows/Command
+myTerminal          = "urxvtc"
+myWebBrowser        = "firefox"
+myStatusDzen        = "dzen2 -w 960 -h 20 -ta l" ++ myDzenOpts
+myStatusConky       = "conky | dzen2 -x 960 -w 960 -h 20 -ta r" ++ myDzenOpts
+myXcompmgrSettings  = ["-f", "-I", ".075", "-O", ".075", "-D", "10", "-c", "-r", "20", "-o", ".8", "-C"]
 
 ----------------------
 --Colors, Fonts, Etc--
@@ -172,18 +173,17 @@ myKeys =  [
 
 ------------------------------------------------
 --Default Application Startup, Dock is in main--
------------------------------------------------- 
+------------------------------------------------
 startupApps     = do
-    safeSpawnProg "urxvtc"
-    safeSpawn "xcompmgr" ["-f", "-I", ".075", "-O", ".075", "-D", "10", "-c", "-r", "20", "-o", ".8", "-C"]
-    safeSpawnProg "xcape"  --Keyboard Daemon, intercepts Control, and sends Escape on short presses of Control, otherwise sends Control
-    safeSpawn "dropbox_cli" ["start"]
-    safeSpawnProg "xscreensaver"
     safeSpawnProg "urxvtd"              --Daemon running my terminals, reduces resource usage and improves preformance
+    safeSpawnProg "urxvtc"              --Get a starting terminal running
+    safeSpawn "xcompmgr" myXcompmgrSettings
+    safeSpawnProg "xcape"  --Keyboard Daemon, intercepts Control, and sends Escape on short presses of Control, otherwise sends Control
+    safeSpawnProg "xscreensaver"
+--    safeSpawn "dropbox_cli" ["start"]
     safeSpawnProg "pidgin"
     safeSpawnProg "firefox"
-    safeSpawnProg "spotify"
-    safeSpawnProg "xcape"
+--    safeSpawnProg "spotify"
 --    safeSpawnProg "xchat"
 --    safeSpawn "trayer" [ "--edge", "top"    --This is my System Tray
 --                       , "--align", "right"
@@ -206,12 +206,22 @@ scratchpads = [ NS "htop" "urxvtc -e htop" (title =? "sp_htop") defaultFloating
               , NS "haskell" "urxvtc -e ghci" (title =? "sp_haskell") defaultFloating
               ] where role = stringProperty "WM_WINDOW_ROLE"
 
+----------------------
+--Structures to help--
+----------------------
+--type myAbbrev       = String
+--type myDir          = FilePath
+--type myAction       =
+--type myTopic        = (Topic, Bool, myAbbrev, myDir, myAction)
+
+
 ----------------
 --Topic Spaces--
 ----------------
 myTopics :: [Topic]
 myTopics =  [ "dashboard"
             , "web"
+            , "minecraft"
             , "notes"
             , "im"
             , "irc"
@@ -233,6 +243,7 @@ myTopics =  [ "dashboard"
 myStaticTopics :: [Topic]
 myStaticTopics =  [ "dashboard"
                   , "web"
+                  , "minecraft"
                   , "notes"
                   , "im"
                   , "irc"
@@ -242,6 +253,7 @@ myStaticTopics =  [ "dashboard"
 
 myTopicsToAbbrev ab = case ab of
   "dashboard"   -> "dash"
+  "minecraft"   -> "mc"
   "music"       -> "mus"
   "video"       -> "vid"
   "python"      -> "py"
@@ -256,6 +268,7 @@ myTopicConfig :: TopicConfig
 myTopicConfig = defaultTopicConfig
   { topicDirs = M.fromList $
     [ ("dashboard"  , "~/")
+    , ("minecraft"  , "~/.minecraft")
     , ("notes"      , "~/doc/notes")
     , ("web"        , "~/dl")
     , ("im"         , "~/")
@@ -314,16 +327,18 @@ promptedGotoGrid = wsGrid >>= flip whenJust (switchTopic myTopicConfig)
 --Manage Hook--
 ---------------
 myManageHook    = composeAll
-    [ className =? "Firefox"            --> doShift "web"
-    , className =? "Iceweasel"          --> doShift "web"
-    , className =? "Chromium"           --> doShift "web"
-    , className =? "Pidgin"             --> insertPosition End Older <+> doShift "im"
-    , className =? "xchat"              --> doShift "irc"
-    , className =? "Gimp"               --> doFloat             --Lets Gimp Windows Float by default
-    , title     =? "pinentry"           --> doFloat
-    , className =? "MPlayer"            --> doFloat             --MPlayer windows don't get docked
-    , className =? "Spotify"            --> doShift "music"
-    , isFullscreen                      --> doFullFloat         --Good catch all for full screen video, smartBorders is also used on the layoutHook
+    [ className =? "Firefox"                     --> doShift "web"
+    , className =? "Iceweasel"                   --> doShift "web"
+    , className =? "Chromium"                    --> doShift "web"
+    , className =? "Pidgin"                      --> insertPosition End Older <+> doShift "im"
+    , className =? "xchat"                       --> doShift "irc"
+    , className =? "Gimp"                        --> doFloat             --Lets Gimp Windows Float by default
+    , className =? "feh"                         --> doCenterFloat
+    , title     =? "pinentry"                    --> doFloat
+    , className =? "MPlayer"                     --> doFloat             --MPlayer windows don't get docked
+    , className =? "Spotify"                     --> doShift "music"
+    , className =? "net-minecraft-LauncherFrame" --> doShift "minecraft"
+    , isFullscreen                               --> doFullFloat         --Good catch all for full screen video, smartBorders is also used on the layoutHook
     ]
 
 -----------------------------------------
