@@ -16,8 +16,8 @@ URxvt.scrollstyle: 			plain
 URxvt.savelines:			60000
 URxvt.borderLess:			false
 URxvt.depth:				32
-URxvt.background: 			rgba:0000/0000/0000/bbbb
-URxvt.foreground:			white
+!URxvt.background: 			rgba:5555/5555/5555/bbbb
+!URxvt.foreground:			white
 URxvt.perl-ext-common: 		default,url-select,tabbed,vtwheel,font-size
 URxvt.urlLauncher: 			/usr/bin/firefox
 URxvt.matcher.button: 		1
@@ -27,6 +27,40 @@ URxvt.buffered:				true
 URxvt.keysym.M-u:			perl:url-select:select_next
 URxvt.keysym.M-=:           perl:font-size:increase
 URxvt.keysym.M--:           perl:font-size:decrease
+
+!urxvt zenburn colorscheme http://snk.tuxfamily.org/log/zenburn-terminal-color-scheme.html
+!BLK Cursor
+URxvt.color0      : #000d18
+URxvt.color8      : #000d18
+!RED Tag
+URxvt.color1      : #e89393
+URxvt.color9      : #e89393
+!GRN SpecialKey
+URxvt.color2      : #9ece9e
+URxvt.color10     : #9ece9e
+!YEL Keyword
+URxvt.color3      : #f0dfaf
+URxvt.color11     : #f0dfaf
+!BLU Number
+URxvt.color4      : #8cd0d3
+URxvt.color12     : #8cd0d3
+!MAG Precondit
+URxvt.color5      : #c0bed1
+URxvt.color13     : #c0bed1
+!CYN Float
+URxvt.color6      : #dfaf8f
+URxvt.color14     : #dfaf8f
+!WHT Search
+URxvt.color7      : #efefef
+URxvt.color15     : #efefef
+!TXT Normal, Normal, Cursor
+URxvt.background  : #1f1f1f
+URxvt.foreground  : #dcdccc
+URxvt.cursorColor : #8faf9f
+!HLT Include, StatusLine, ErrorMsg
+URxvt.colorBD     : #ffcfaf
+URxvt.colorUL     : #ccdc90
+URxvt.colorIT     : #80d4aa
 
 
 
