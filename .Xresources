@@ -10,7 +10,7 @@ XTerm.scrollBar:    true
 XTerm.scrollKey:    true
 XTerm.saveLines:    2048
 
-URxvt.font: 				xft:Inconsolata:size=11:antialias:true
+URxvt.font: 				xft:Inconsolata:size=8:antialias:true
 URxvt.letterSpace:			-1
 URxvt.scrollstyle: 			plain
 URxvt.savelines:			60000
@@ -18,15 +18,13 @@ URxvt.borderLess:			false
 URxvt.depth:				32
 !URxvt.background: 			rgba:5555/5555/5555/bbbb
 !URxvt.foreground:			white
-URxvt.perl-ext-common: 		default,url-select,tabbed,vtwheel,font-size
+URxvt.perl-ext-common: 		default,url-select,tabbed,vtwheel
 URxvt.urlLauncher: 			/usr/bin/firefox
 URxvt.matcher.button: 		1
 URxvt.underlineURLs:		true
 URxvt.buffered:				true
 
 URxvt.keysym.M-u:			perl:url-select:select_next
-URxvt.keysym.M-=:           perl:font-size:increase
-URxvt.keysym.M--:           perl:font-size:decrease
 
 !urxvt zenburn colorscheme http://snk.tuxfamily.org/log/zenburn-terminal-color-scheme.html
 !BLK Cursor
@@ -63,9 +61,12 @@ URxvt.colorUL     : #ccdc90
 URxvt.colorIT     : #80d4aa
 
 
-
 Xft.antialias:		true
 
+!-----------------------------------------------------------------------------
+! xpdf
 xpdf.antialias:		yes
 xpdf.enableFreetype:yes
-
+xpdf.foreground:        black
+xpdf.background:        white
+xpdf.urlCommand:        /usr/bin/firefox %s
