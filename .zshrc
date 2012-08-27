@@ -75,6 +75,14 @@ alias killFlash='~/.killFlash.sh'
 alias connectToSimon='ssh -Nfq -L 2676:simon.mines.edu:22 zstigall@imagine.mines.edu'
 alias makeJavaWindowsWork='wmname LG3D'
 
+###Functions
+function cd {
+    if (( $# == 0 ))
+    then builtin pushd
+    else builtin cd $*
+    fi
+}
+
 ###Path Additions
 #Perl Crap
 export PERL_LOCAL_LIB_ROOT="/home/zirro/perl5";
