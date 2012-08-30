@@ -8,4 +8,4 @@ use_xft yes
 double_buffer yes
 
 TEXT
-^fg() ^fg(\#cd0000)CPU: ${cpu}%^fg() ^fg(\#0000cd)::^fg() ^fg(\#32cd32)RAM: ${mem}^fg() ^fg(\#0000cd)::^fg() ${execpi 10 power_status} ^fg(\#0000cd)::^fg() ${time %d %b %H:%M}
+^fg() Dropbox: ${execi 10 /usr/bin/dropbox status} ^fg(\#cd0000)CPU: ${cpu}%^fg() ^fg(\#0000cd)::^fg() ^fg(\#32cd32)RAM: ${mem}^fg() ^fg(\#0000cd)::^fg() ${time %d %b %H:%M}
