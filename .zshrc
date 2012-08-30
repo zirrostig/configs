@@ -25,8 +25,8 @@ unsetopt BEEP       #No Annoying beep
 setopt AUTO_CD      #cd not necessary anymore
 
 ###Completion Options, Expansion, Globbing
-setopt AUTO_LIST			#Shows choices on ambiguous
-setopt LIST_AMBIGUOUS		#Fills to ambiguous, then lets AUTO_LIST work
+setopt AUTO_LIST            #Shows choices on ambiguous
+setopt LIST_AMBIGUOUS       #Fills to ambiguous, then lets AUTO_LIST work
 setopt LIST_TYPES
 setopt BAD_PATTERN
 setopt CASE_MATCH
@@ -55,17 +55,6 @@ bindkey '[3~' delete-char            #Forward Delete Key
 bindkey '^r' history-incremental-search-backward   #^r now works - history search
 bindkey '^[l' push-line
 
-rationalise-dot() {
-    if [[ $LBUFFER = *..  ]]; then
-        LBUFFER+=/..
-    else
-        LBUFFER+=.
-    fi
-
-}
-zle -N rationalise-dot
-bindkey . rationalise-dot
-
 ###Aliases
 alias ls='ls --color=auto'
 alias ll='ls -l'
@@ -77,11 +66,21 @@ alias makeJavaWindowsWork='wmname LG3D'
 
 ###Functions
 function cd {
-    if (( $# == 0 ))
-    then builtin pushd
+if (( $# == 0 )) && [[ `pwd` != $HOME ]]
+    then builtin pushd -q ~/
     else builtin cd $*
     fi
 }
+
+rationalise-dot() {
+    if [[ $LBUFFER = *..  ]]; then
+        LBUFFER+=/..
+    else
+        LBUFFER+=.
+    fi
+}
+zle -N rationalise-dot
+bindkey . rationalise-dot
 
 ###Path Additions
 #Perl Crap
@@ -91,7 +90,7 @@ export PERL_MM_OPT="INSTALL_BASE=/home/zirro/perl5";
 export PERL5LIB="/home/zirro/perl5/lib/perl5/x86_64-linux-thread-multi:/home/zirro/perl5/lib/perl5";
 #export PATH="/home/zirro/perl5/bin:$PATH";
 
-#export PATH="${PATH}:/home/zirro/ap/android-sdk-linux/tools:/home/zirro/ap/android-sdk-linux/platform-tools";	#Android SDK
+#export PATH="${PATH}:/home/zirro/ap/android-sdk-linux/tools:/home/zirro/ap/android-sdk-linux/platform-tools";  #Android SDK
 #Cabal Packages
 #export PATH="/home/zirro/.cabal/bin:${PATH}";
 
