@@ -18,13 +18,14 @@ URxvt.borderLess:			false
 URxvt.depth:				32
 !URxvt.background: 			rgba:5555/5555/5555/bbbb
 !URxvt.foreground:			white
-URxvt.perl-ext-common: 		default,url-select,tabbed,vtwheel
+URxvt.perl-ext-common: 		default,url-select,vtwheel,keyboard-select
 URxvt.urlLauncher: 			/usr/bin/firefox
 URxvt.matcher.button: 		1
 URxvt.underlineURLs:		true
 URxvt.buffered:				true
 
 URxvt.keysym.M-u:			perl:url-select:select_next
+URxvt.keysym.M-Escape:      perl:keyboard-select:activate
 
 !urxvt zenburn colorscheme http://snk.tuxfamily.org/log/zenburn-terminal-color-scheme.html
 !BLK Cursor
@@ -63,6 +64,7 @@ URxvt.colorIT     : #80d4aa
 
 Xft.antialias:		true
 Xft.dpi:            131
+Xft.hinting:        
 
 !-----------------------------------------------------------------------------
 ! xpdf

@@ -63,6 +63,7 @@ alias allcolors='(x=`tput op` y=`printf %80s`;for i in {0..255};do o=00$i;echo -
 alias killFlash='~/.killFlash.sh'
 alias connectToSimon='ssh -Nfq -L 2676:simon.mines.edu:22 zstigall@imagine.mines.edu'
 alias makeJavaWindowsWork='wmname LG3D'
+alias vim=gvim
 
 ###Functions
 function cd {
@@ -102,3 +103,8 @@ export PATH="/home/zirro/app/bin:${PATH}";
 export EDITOR="vim";
 export BROWSER="firefox";
 export WINEARCH="win32";
+
+#CSCI410 Tecs HW Sim
+function tecshw {
+    /home/zirro/csm/f12/csci410/tecs/HardwareSimulator.sh $PWD/$1
+}
