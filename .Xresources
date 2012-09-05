@@ -1,30 +1,28 @@
-XTerm.faceName:     inconsolata
-XTerm.faceSize:     12
-XTerm.background:   gray16
-XTerm.foreground:   green
-XTerm.pointerColor: red
-XTerm.pointerColorBackground: gray15
-XTerm.cursorColor:  white
-XTerm.loginShell:   true
-XTerm.scrollBar:    true
-XTerm.scrollKey:    true
-XTerm.saveLines:    2048
+!XTerm.faceName:     inconsolata
+!XTerm.faceSize:     12
+!XTerm.background:   gray16
+!XTerm.foreground:   green
+!XTerm.pointerColor: red
+!XTerm.pointerColorBackground: gray15
+!XTerm.cursorColor:  white
+!XTerm.loginShell:   true
+!XTerm.scrollBar:    true
+!XTerm.scrollKey:    true
+!XTerm.saveLines:    2048
 
-URxvt.font: 				xft:Inconsolata:size=8:antialias:true
-URxvt.letterSpace:			-1
-URxvt.scrollstyle: 			plain
-URxvt.savelines:			60000
-URxvt.borderLess:			false
-URxvt.depth:				32
-!URxvt.background: 			rgba:5555/5555/5555/bbbb
-!URxvt.foreground:			white
-URxvt.perl-ext-common: 		default,url-select,vtwheel,keyboard-select
-URxvt.urlLauncher: 			/usr/bin/firefox
-URxvt.matcher.button: 		1
-URxvt.underlineURLs:		true
-URxvt.buffered:				true
+URxvt.font:                 xft:Inconsolata:size=10:antialias:true
+URxvt.letterSpace:          -1
+URxvt.scrollstyle:          plain
+URxvt.savelines:            60000
+URxvt.borderLess:           false
+URxvt.depth:                32
+URxvt.perl-ext-common:      default,url-select,vtwheel,keyboard-select
+URxvt.urlLauncher:          /usr/bin/firefox
+URxvt.matcher.button:       1
+URxvt.underlineURLs:        true
+URxvt.buffered:             true
 
-URxvt.keysym.M-u:			perl:url-select:select_next
+URxvt.keysym.M-u:           perl:url-select:select_next
 URxvt.keysym.M-Escape:      perl:keyboard-select:activate
 
 !urxvt zenburn colorscheme http://snk.tuxfamily.org/log/zenburn-terminal-color-scheme.html
@@ -62,13 +60,11 @@ URxvt.colorUL     : #ccdc90
 URxvt.colorIT     : #80d4aa
 
 
-Xft.antialias:		true
-Xft.dpi:            131
-Xft.hinting:        
+Xft.antialias:      true
 
 !-----------------------------------------------------------------------------
 ! xpdf
-xpdf.antialias:		yes
+xpdf.antialias:     yes
 xpdf.enableFreetype:yes
 xpdf.foreground:        black
 xpdf.background:        white
