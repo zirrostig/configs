@@ -2,7 +2,7 @@
 
 #Shuffles Backgrounds
 backgroundsDir=~/mm/pic/wallpapers
-delay=10s
+delay=300s
 
 while true; do
     pic=$(find $backgroundsDir -type f \( -name '*.jpg' -o -name '*.png' \) -print0 | shuf -n1 -z )
