@@ -1,7 +1,7 @@
 !------------------------------------------------------------------------------
 ! URxvt
 
-URxvt.font:                 xft:peep:style=Regular:size=8
+URxvt.font:                 -zevv-peep-*-*-*-*-14-*-*-*-*-*-*-*
 !URxvt.letterSpace:          0
 URxvt.scrollstyle:          plain
 URxvt.savelines:            60000
@@ -14,41 +14,43 @@ URxvt.matcher.button:       1
 URxvt.underlineURLs:        true
 URxvt.buffered:             true
 
-!URxvt.keysym.M-=:           perl:font-size:increase
-!URxvt.keysym.M--:           perl:font-size:decrease
+URxvt.keysym.M-=:           perl:font-size:increase
+URxvt.keysym.M--:           perl:font-size:decrease
 URxvt.keysym.C-n:           perl:url-select:select_next
 URxvt.keysym.C-Escape:      perl:keyboard-select:activate
 
+!Colorscheme based on jellebeans colorscheme for vim
+!Regular colors are true to original, brights are mostly saturation increases
 !!BLK Cursor
 URxvt.color0      : #000000
 URxvt.color8      : #000000
 !!!RED Tag
 URxvt.color1      : #cf6a4c
-URxvt.color9      : #902020
+URxvt.color9      : #dc3a13
 !!GRN SpecialKey
 URxvt.color2      : #99ad6a
-URxvt.color10     : #70b950
+URxvt.color10     : #9dca32
 !!YEL Keyword
 URxvt.color3      : #dad085
-URxvt.color11     : #fad07a
+URxvt.color11     : #f5d90b
 !!BLU Number
 URxvt.color4      : #668799
-URxvt.color12     : #668799
+URxvt.color12     : #006399
 !!MAG Precondit
 URxvt.color5      : #f0a0c0
-URxvt.color13     : #f0a0c0
+URxvt.color13     : #f03b84
 !!CYN Float
 URxvt.color6      : #8bcbe8
-URxvt.color14     : #8bcbe8
+URxvt.color14     : #00afff
 !!WHT Search
-URxvt.color7      : #efefef
+URxvt.color7      : #e8e8d3
 URxvt.color15     : #ffffff
 !!TXT Normal, Normal, Cursor
 URxvt.background  : #151515
 URxvt.foreground  : #e8e8d3
 URxvt.cursorColor : #b0d0f0
 !!HLT Include, StatusLine, ErrorMsg
-!URxvt.colorBD     : #ffcfaf
+!URxvt.colorBD     : #dddddd
 !URxvt.colorUL     : #ccdc90
 !URxvt.colorIT     : #80d4aa
 

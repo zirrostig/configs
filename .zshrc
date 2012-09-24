@@ -33,6 +33,7 @@ setopt CASE_MATCH
 setopt NOMATCH
 setopt NUMERIC_GLOB_SORT
 setopt REMATCH_PCRE         #Perl-Style Regex :)
+setopt EXTENDEDGLOB
 
 ###History Settings
 HISTFILE=$HOME/.zsh_hist
