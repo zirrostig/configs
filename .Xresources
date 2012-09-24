@@ -4,20 +4,28 @@
 URxvt.font:                 -zevv-peep-*-*-*-*-14-*-*-*-*-*-*-*
 !Disable bold font
 URxvt.boldFont:             -zevv-peep-*-*-*-*-14-*-*-*-*-*-*-*
-!URxvt.letterSpace:          0
+URxvt.letterSpace:          0
 URxvt.scrollstyle:          plain
-URxvt.savelines:            60000
+URxvt.savelines:            65535
 !borderLess needs to be off for xmonad to not go nuts
 URxvt.borderLess:           false
 URxvt.depth:                32
+URxvt.buffered:             true
+URxvt.transparent:          true
+URxvt.shading:              30
+URxvt.blurRadius:           5
+URxvt.cursorBlink:          true
+URxvt.pointerBlank:         true
+
+!Perl Extension Stuff
 URxvt.perl-ext-common:      default,url-select,vtwheel,keyboard-select,font-size
 URxvt.urlLauncher:          /usr/bin/firefox
 URxvt.matcher.button:       1
 URxvt.underlineURLs:        true
-URxvt.buffered:             true
 
-URxvt.keysym.M-=:           perl:font-size:increase
-URxvt.keysym.M--:           perl:font-size:decrease
+!Keyboard shortcuts
+URxvt.keysym.C-=:           perl:font-size:increase
+URxvt.keysym.C--:           perl:font-size:decrease
 URxvt.keysym.C-n:           perl:url-select:select_next
 URxvt.keysym.C-Escape:      perl:keyboard-select:activate
 
@@ -68,3 +76,5 @@ xpdf.enableFreetype:yes
 xpdf.foreground:        black
 xpdf.background:        white
 xpdf.urlCommand:        /usr/bin/firefox %s
+
+! vim: ft=xdefaults
