@@ -1,0 +1,48 @@
+# vim: ft=conf
+##############################################
+# Settings
+##############################################
+background yes
+use_xft yes
+xftfont Exo:size=10
+xftalpha 1
+update_interval 2.0
+total_run_times 0
+own_window yes
+
+## xcompmgr
+own_window_type desktop
+own_window_argb_visual yes
+own_window_argb_value 0
+own_window_colour 000000
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+double_buffer yes
+minimum_size 464 67
+maximum_width 464
+max_text_width 75
+draw_shades no
+draw_outline no
+draw_borders no
+draw_graph_borders no
+default_color 656667
+default_shade_color 000000
+default_outline_color 656667
+alignment bottom_right
+gap_x 161
+gap_y 16
+no_buffers yes
+uppercase no
+cpu_avg_samples 2
+override_utf8_locale yes
+border_inner_margin 32
+text_buffer_size 65536
+
+lua_load /home/feoh3/.conky/draw_bg_bottom.lua
+lua_draw_hook_pre draw_bg
+##############################################
+#  Output
+##############################################
+
+TEXT
+${font Exo:black:size=10}TODO$font: ${execi 10 /home/feoh3/d/bin/todo ls | sed -e 's/^[0-9]\+ //g' -e '/^--/,$d;' | tr '\n' , | sed -e 's/,$//;s/,/, /g'}
+${voffset 9}${font Exo:black:size=10}CALENDAR: $font${execpi 300 google calendar list | sed -e '1,2d;4,$d' -e 's/,\([A-Za-z]\+ [0-9]\+\)\([0-9: ]\+\)- \1 /,\1\2- /g;s/,\(.*\)/$font (\1)/g;s/^/${font Exo:bold:size=10}/'}

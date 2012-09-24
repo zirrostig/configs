@@ -1,0 +1,63 @@
+##############################################
+# Settings
+##############################################
+background yes
+use_xft yes
+xftfont Exo:size=10
+xftalpha 1
+update_interval 2.0
+total_run_times 0
+own_window yes
+own_window_type desktop
+own_window_argb_visual yes
+own_window_argb_value 0
+own_window_colour 000000
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+double_buffer yes
+minimum_size 109 200
+maximum_width 109
+draw_shades no
+draw_outline no
+draw_borders no
+draw_graph_borders no
+default_color 656667
+default_shade_color 000000
+default_outline_color 656667
+alignment bottom_right
+gap_x 16
+gap_y 16
+no_buffers yes
+uppercase no
+cpu_avg_samples 2
+override_utf8_locale yes
+border_inner_margin 16
+
+lua_load /home/feoh3/.conky/draw_bg.lua
+lua_draw_hook_pre draw_bg
+##############################################
+#  Output
+##############################################
+
+TEXT
+${font Exo:bold:size=16}THWOMP$font
+(up $uptime_short)
+
+${font Exo:bold:size=10}STATUS$font
+${voffset -9}________________________________${voffset 2}
+RAM, Swap:
+  $memperc%, $swapperc%
+${voffset 9}/, /home:
+  ${fs_used_perc /}%, ${fs_used_perc /home}%
+${voffset 9}CPU:
+  ${cpu cpu0}%, $acpitemp °C
+${voffset 9}Battery:
+  $battery
+
+${font Exo:bold:size=10}WIRELESS$font
+${voffset -9}_______________${voffset 2}
+(${wireless_link_qual_perc wlan0}%) ${wireless_essid wlan0}
+${voffset 9}${addr wlan0}
+-> ${gw_ip wlan0}${execpi 10 /home/feoh3/d/bin/unicode-stat ping -q -c 1 -W 1 $(ip r | grep default | cut -d " " -f 3)}
+
+${font Exo:size=26:bold}${voffset 8}$alignr${time %I:%M}
+${font Exo:size=10}$alignr${voffset -28}${time %a. %F}$font
