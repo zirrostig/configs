@@ -1,8 +1,13 @@
 #!/bin/bash
 
-xrdb -merge ~/.Xresources
+#Add xmonad to path
+export PATH="/home/zirro/.cabal/bin:${PATH}"
+#Add other stuff to path
+export PATH="/home/zirro/perl5/bin:$PATH";
+export PATH="/home/zirro/.cabal/bin:$PATH";
+export PATH="/home/zirro/cfg/bin:$PATH";
 
-/home/zirro/cfg/bin/wallpaperShuffle &
+wallpaperShuffle &
 
 xcompmgr -f -I .075 -O .075 -D 10 -c -r 20 -o .8 -C &
 
@@ -14,8 +19,10 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
   unset f
 fi
 
-#Add xmonad to path
-export PATH="/home/zirro/.cabal/bin:${PATH}"
+xset r rate 300 25
+xrdb -merge ~/.Xresources
+
+dropboxd start &
 
 exec $1
 
