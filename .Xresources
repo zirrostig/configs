@@ -1,64 +1,59 @@
-!XTerm.faceName:     inconsolata
-!XTerm.faceSize:     12
-!XTerm.background:   gray16
-!XTerm.foreground:   green
-!XTerm.pointerColor: red
-!XTerm.pointerColorBackground: gray15
-!XTerm.cursorColor:  white
-!XTerm.loginShell:   true
-!XTerm.scrollBar:    true
-!XTerm.scrollKey:    true
-!XTerm.saveLines:    2048
+!------------------------------------------------------------------------------
+! URxvt
 
-URxvt.font:                 xft:Inconsolata:size=8:antialias:true
-URxvt.letterSpace:          -1
+URxvt.font:                 xft:peep:style=Regular:size=8
+!URxvt.letterSpace:          0
 URxvt.scrollstyle:          plain
 URxvt.savelines:            60000
+!borderLess needs to be off for xmonad to not go nuts
 URxvt.borderLess:           false
 URxvt.depth:                32
-URxvt.perl-ext-common:      default,url-select,vtwheel,keyboard-select
+URxvt.perl-ext-common:      default,url-select,vtwheel,keyboard-select,font-size
 URxvt.urlLauncher:          /usr/bin/firefox
 URxvt.matcher.button:       1
 URxvt.underlineURLs:        true
 URxvt.buffered:             true
 
-URxvt.keysym.M-u:           perl:url-select:select_next
-URxvt.keysym.M-Escape:      perl:keyboard-select:activate
+!URxvt.keysym.M-=:           perl:font-size:increase
+!URxvt.keysym.M--:           perl:font-size:decrease
+URxvt.keysym.C-n:           perl:url-select:select_next
+URxvt.keysym.C-Escape:      perl:keyboard-select:activate
 
-!urxvt zenburn colorscheme http://snk.tuxfamily.org/log/zenburn-terminal-color-scheme.html
-!BLK Cursor
-URxvt.color0      : #000d18
-URxvt.color8      : #000d18
-!RED Tag
-URxvt.color1      : #e89393
-URxvt.color9      : #e89393
-!GRN SpecialKey
-URxvt.color2      : #9ece9e
-URxvt.color10     : #9ece9e
-!YEL Keyword
-URxvt.color3      : #f0dfaf
-URxvt.color11     : #f0dfaf
-!BLU Number
-URxvt.color4      : #8cd0d3
-URxvt.color12     : #8cd0d3
-!MAG Precondit
-URxvt.color5      : #c0bed1
-URxvt.color13     : #c0bed1
-!CYN Float
-URxvt.color6      : #dfaf8f
-URxvt.color14     : #dfaf8f
-!WHT Search
+!!BLK Cursor
+URxvt.color0      : #000000
+URxvt.color8      : #000000
+!!!RED Tag
+URxvt.color1      : #cf6a4c
+URxvt.color9      : #902020
+!!GRN SpecialKey
+URxvt.color2      : #99ad6a
+URxvt.color10     : #70b950
+!!YEL Keyword
+URxvt.color3      : #dad085
+URxvt.color11     : #fad07a
+!!BLU Number
+URxvt.color4      : #668799
+URxvt.color12     : #668799
+!!MAG Precondit
+URxvt.color5      : #f0a0c0
+URxvt.color13     : #f0a0c0
+!!CYN Float
+URxvt.color6      : #8bcbe8
+URxvt.color14     : #8bcbe8
+!!WHT Search
 URxvt.color7      : #efefef
-URxvt.color15     : #efefef
-!TXT Normal, Normal, Cursor
-URxvt.background  : #1f1f1f
-URxvt.foreground  : #dcdccc
-URxvt.cursorColor : #8faf9f
-!HLT Include, StatusLine, ErrorMsg
-URxvt.colorBD     : #ffcfaf
-URxvt.colorUL     : #ccdc90
-URxvt.colorIT     : #80d4aa
+URxvt.color15     : #ffffff
+!!TXT Normal, Normal, Cursor
+URxvt.background  : #151515
+URxvt.foreground  : #e8e8d3
+URxvt.cursorColor : #b0d0f0
+!!HLT Include, StatusLine, ErrorMsg
+!URxvt.colorBD     : #ffcfaf
+!URxvt.colorUL     : #ccdc90
+!URxvt.colorIT     : #80d4aa
 
+!-----------------------------------------------------------------------------
+! Xft
 
 Xft.antialias:      true
 
