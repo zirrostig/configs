@@ -6,7 +6,7 @@ URxvt.font:                 -zevv-peep-*-*-*-*-14-*-*-*-*-*-*-*
 URxvt.boldFont:             -zevv-peep-*-*-*-*-14-*-*-*-*-*-*-*
 URxvt.letterSpace:          0
 URxvt.scrollstyle:          plain
-URxvt.savelines:            65535
+URxvt.saveLines:            20000
 !borderLess needs to be off for xmonad to not go nuts
 URxvt.borderLess:           false
 URxvt.depth:                32
