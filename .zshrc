@@ -10,8 +10,8 @@ setopt PROMPT_BANG      #Replace ! (bang) with history event number
 setopt PROMPT_PERCENT   #% treated special
 setopt TRANSIENT_RPROMPT    #Used when accepting commands from copy/paste or otherwise
 #The Prompts
-PS1="%F{cyan}%M%f %F{green}%4/%f %(?.%?%B%#%b.%F{red}%?%B%b%f%#) "    #Displays: *** History# Hostname CurDir(4 max) ReturnStatus PromptThing(%or#)
-RPROMPT="%F{cyan}%*%f"                 #Displays: *** HH:mm:ss (%*)
+PS1="%F{red}%M%f %F{green}%4/%f %(?.%?%B%#%b.%F{red}%?%B%b%f%#) "    #Displays: *** History# Hostname CurDir(4 max) ReturnStatus PromptThing(%or#)
+RPROMPT="%F{yellow}%*%f"                 #Displays: *** HH:mm:ss (%*)
 PS2="%_ > "
 PS4="%_ %i>> "
 

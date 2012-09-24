@@ -2,6 +2,8 @@
 ! URxvt
 
 URxvt.font:                 -zevv-peep-*-*-*-*-14-*-*-*-*-*-*-*
+!Disable bold font
+URxvt.boldFont:             -zevv-peep-*-*-*-*-14-*-*-*-*-*-*-*
 !URxvt.letterSpace:          0
 URxvt.scrollstyle:          plain
 URxvt.savelines:            60000
