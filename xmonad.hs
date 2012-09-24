@@ -65,7 +65,7 @@ myModKey h
 myTerminal      = "urxvtc"
 myWebBrowser    = "firefox"
 myStatusDzen h  = "dzen2 -w 960 -h 20 -ta l" ++ myDzenOpts h
-myStatusConky h = "conky | dzen2 -x 960 -w 960 -h 20 -ta r" ++ myDzenOpts h
+myStatusConky h = "conky -c ~/.conky/statusbar.rc | dzen2 -x 960 -w 960 -h 20 -ta r" ++ myDzenOpts h
 
 ----------------------
 --Colors, Fonts, Etc--
