@@ -16,7 +16,6 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.UrgencyHook
 
-import XMonad.Layout.Accordion
 import XMonad.Layout.Combo
 import XMonad.Layout.Grid
 import XMonad.Layout.IM
@@ -46,6 +45,7 @@ import Control.Monad((<=<))
 import Control.Applicative((<$>))
 import Data.Ratio ((%))
 
+import qualified Data.List as L
 import qualified Data.Map as M
 import qualified XMonad.StackSet as W
 import qualified XMonad.Util.ExtensibleState as XS
@@ -54,6 +54,7 @@ import qualified XMonad.Util.ExtensibleState as XS
 --Helper Functions--
 --------------------
 hostname = nodeName <$> getSystemID
+
 
 ---------------------------------------
 --Default Settings for various things--
@@ -119,14 +120,9 @@ myKeys host conf = M.fromList $ [
           --Hiding of stuff
           , ((modKey                , xK_b                     ), sendMessage ToggleStruts                       )  -- Hide Status Bars
           --Window/Workspace Management
---          , ((modKey                , xK_Left                  ), prevWS                                         )  -- Moves focus to the workspace to the left
---          , ((modKey                , xK_Right                 ), nextWS                                         )  -- Moves focus to the workspace to the right
---          , ((modKey   .|. controlMask, xK_Left                ), shiftToPrev >> prevWS                          )  -- Move focused window to workspace to the left
---          , ((modKey   .|. controlMask, xK_Right               ), shiftToNext >> nextWS                          )  -- Move focused window to workspace to the right
---          , ((modKey   .|. controlMask              , xK_Left  ), prevScreen                                     )  -- Moves focus to the screen on the left (MultiMonitor Setup)
---          , ((modKey   .|. controlMask              , xK_Right ), nextScreen                                     )  -- Moves focus to the screen on the right (MultiMonitor Setup)
---          , ((modKey   .|. shiftMask .|. controlMask, xK_Left  ), shiftPrevScreen                                )  -- Moves focused window to the screen on the left (MultiMonitor Setup)
---          , ((modKey   .|. shiftMask .|. controlMask, xK_Right ), shiftNextScreen                                )  -- Moves focused window to the screen on the right (MultiMonitor Setup)
+          , ((modKey   .|. controlMask, xK_Left                ), prevWS                                         )  -- Move focused window to workspace to the left
+          , ((modKey   .|. controlMask, xK_Right               ), nextWS                                         )  -- Move focused window to workspace to the right
+            --Plus the madness at the bottom of this function
           --Window Management
           , ((modKey                , xK_Return                ), dwmpromote                                     )  -- Swaps Master and current (top of slave stack)
           , ((modKey                , xK_Tab                   ), windows W.focusDown                            )  -- Move focus to the next window
@@ -141,22 +137,18 @@ myKeys host conf = M.fromList $ [
           , ((modKey                , xK_t                     ), withFocused $ windows . W.sink                 )  -- Push window back into tiling
           , ((modKey                , xK_comma                 ), sendMessage (IncMasterN 1)                     )  -- Increment the number of windows in the master area
           , ((modKey                , xK_period                ), sendMessage (IncMasterN (-1))                  )  -- Deincrement the number of windows in the master area
-          , ((modKey                , xK_Right                 ), sendMessage $ Move R                           )
-          , ((modKey                , xK_Left                  ), sendMessage $ Move L                           )
-          , ((modKey                , xK_Up                    ), sendMessage $ Move U                           )
-          , ((modKey                , xK_Down                  ), sendMessage $ Move D                           )
-          , ((modKey   .|. shiftMask, xK_Right                 ), sendMessage $ Swap R                           )
+          , ((modKey                , xK_Right                 ), sendMessage $ Move R                           )  -- Moves current window right
+          , ((modKey                , xK_Left                  ), sendMessage $ Move L                           )  -- Moves current window left
+          , ((modKey                , xK_Up                    ), sendMessage $ Move U                           )  -- Moves current window up
+          , ((modKey                , xK_Down                  ), sendMessage $ Move D                           )  -- Moves current window down
+          , ((modKey   .|. shiftMask, xK_Right                 ), sendMessage $ Swap R                           )  -- Make these use the same keys as the above 4 when not in dual tabbed mode
           , ((modKey   .|. shiftMask, xK_Left                  ), sendMessage $ Swap L                           )
           , ((modKey   .|. shiftMask, xK_Up                    ), sendMessage $ Swap U                           )
           , ((modKey   .|. shiftMask, xK_Down                  ), sendMessage $ Swap D                           )
-
---          --Dynamic Workspaces
---          , ((modKey   .|. shiftMask, xK_Up                    ), addWorkspacePrompt myXPConfig                  )  -- Prompts for a new workspace name, creates workspace
---          , ((modKey   .|. shiftMask, xK_Down                  ), removeWorkspace                                )  -- Deletes current workspace,
           --Layout Management
           , ((modKey   .|. controlMask, xK_space               ), sendMessage resetAlt)
           --Lock Computer
-          , ((modKey   .|. shiftMask, xK_z                     ), spawn "xlock +mousemotion"                     )  -- Locks screen with xlock (xlockmore)
+          , ((modKey   .|. shiftMask, xK_z                     ), spawn "slimlock"                               )  -- Locks screen with slimlock
           --Restarting/Closing XMonad
           , ((modKey   .|. shiftMask, xK_apostrophe            ), io (exitWith ExitSuccess)                      )  -- Quits XMonad
           , ((modKey                , xK_apostrophe            ), spawn "if type xmonad; then xmonad --recompile; xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")  -- Restarts XMonad
@@ -177,12 +169,12 @@ myKeys host conf = M.fromList $ [
               ])
           --Scratchpads
           , ((modKey                , xK_n                     ), submap .M.fromList  $
-              [ ((0             , xK_l    ), namedScratchpadAction scratchpads "htop"                            )  -- Opens htop in a temporary window
-              , ((0             , xK_d    ), namedScratchpadAction scratchpads "stardict"                        )  -- Opens stardict
-              , ((0             , xK_f    ), namedScratchpadAction scratchpads "forth"                           )  -- Opens gforth
+              [ ((0             , xK_f    ), namedScratchpadAction scratchpads "forth"                           )  -- Opens gforth
               , ((0             , xK_h    ), namedScratchpadAction scratchpads "haskell"                         )  -- Opens ghci
+              , ((0             , xK_l    ), namedScratchpadAction scratchpads "htop"                            )  -- Opens htop in a temporary window
               , ((0             , xK_n    ), namedScratchpadAction scratchpads "notes"                           )  -- Opens vim on a note file
               , ((0             , xK_p    ), namedScratchpadAction scratchpads "python"                          )  -- Opens python intrepter
+              , ((0             , xK_t    ), namedScratchpadAction scratchpads "todo"                            )  -- Opens my todo file
               ])
           ] ++ [
           -- mod-[1..9], Switch to workspace N
@@ -197,7 +189,6 @@ myKeys host conf = M.fromList $ [
               | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
               , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
           ] where modKey = myModKey host
-  
 
 ------------------------------------------------
 --Default Application Startup, Dock is in main--
@@ -210,12 +201,14 @@ startupApps     = do
 ---------------
 --Scratchpads--
 ---------------
-scratchpads = [ NS "htop" "urxvtc -e htop" (title =? "sp_htop") defaultFloating
-              , NS "stardict" "stardict" (className =? "sp_stardict") defaultFloating
-              , NS "notes" "gvim --role notes ~/doc/notes/notes.txt" (role =? "sp_notes") defaultFloating
-              , NS "python" "urxvtc -e bpython3" (title =? "sp_python") defaultFloating
-              , NS "haskell" "urxvtc -e ghci" (title =? "sp_haskell") defaultFloating
-              , NS "forth" "urxvtc -e gforth" (title =? "sp_forth") defaultFloating
+
+-- The manage hook declarations for these do not work, so they are handled below in myManageHook
+scratchpads = [ NS "forth" "urxvtc -name sp_forth -e gforth"            (resource =? "sp_forth")     defaultFloating
+              , NS "haskell" "urxvtc -name sp_haskell -e ghci"          (resource =? "sp_haskell")   defaultFloating
+              , NS "htop" "urxvtc -name sp_htop -e htop"                (resource =? "sp_htop")      defaultFloating
+              , NS "notes" "gvim --role sp_notes ~/doc/notes/notes.txt" (role =? "sp_notes")         defaultFloating
+              , NS "python" "urxvtc -name sp_python -e bpython"         (resource =? "sp_python")    defaultFloating
+              , NS "todo" "gvim --role sp_notes ~/doc/notes/todo.txt"   (role =? "sp_todo")          defaultFloating
               ] where role = stringProperty "WM_WINDOW_ROLE"
 
 
@@ -253,6 +246,11 @@ myWSabbrev ws = case ws of
 ---------------
 --Manage Hook--
 ---------------
+
+--Returns Query True if q is a prefix of x
+(^?) :: (Eq a) => XMonad.Query [a] -> [a] -> XMonad.Query Bool
+q ^? x = (L.isPrefixOf x) <$> q
+
 myManageHook    = composeAll
     [ className =? "Firefox"            --> doShift "web"
     , className =? "Iceweasel"          --> doShift "web"
@@ -263,8 +261,10 @@ myManageHook    = composeAll
     , title     =? "pinentry"           --> doFloat
     , className =? "MPlayer"            --> doFloat             --MPlayer windows don't get docked
     , className =? "Spotify"            --> doShift "media"
+    , resource  ^? "sp_"                --> doFloat
+    , role      ^? "sp_"                --> doFloat
     , isFullscreen                      --> doFullFloat         --Good catch all for full screen video, smartBorders is also used on the layoutHook
-    ]
+    ] where role = stringProperty "WM_WINDOW_ROLE"
 
 -----------------------------------------
 --Layouts & Workspaces working together--
@@ -277,10 +277,10 @@ myLayoutHook    = onWorkspace "terminal"  layoutTerm $
 -------------------
 ---Layout Control--
 -------------------
-layoutTerm      = comboTabed ||| tabbedLayout ||| tiledLayout ||| mosaicLayout ||| fullLayout
-layoutWeb       = fullLayout ||| mosaicLayout ||| tiledLayout
-layoutIM        = gridIM (1%7) (ClassName "Pidgin")  --Make Buddy List stay on right
-layoutDefault   = mosaicLayout ||| tiledLayout ||| Mirror tiledLayout ||| fullLayout
+layoutTerm      = comboTabed ||| tabbedLayout
+layoutWeb       = fullLayout ||| tiledLayout
+layoutIM        = fullLayout --gridIM (1%7) (ClassName "Pidgin")  --Make Buddy List stay on right
+layoutDefault   = tabbedLayout ||| mosaicLayout ||| fullLayout
 
 ----------------------
 --Customized Layouts--
@@ -319,7 +319,6 @@ myLogHook pipe = defaultPP
                         )
   , ppTitle           = wrap " |" "" . dzenEscape . pad
   }
-
 
 ---------------------
 --The actual config--
