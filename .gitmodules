@@ -1,0 +1,3 @@
+[submodule "sources/xcape"]
+	path = sources/xcape
+	url = git://github.com/alols/xcape.git

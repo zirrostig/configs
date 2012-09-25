@@ -1,5 +1,9 @@
 !------------------------------------------------------------------------------
 ! URxvt
+!   Three man pages to not forget
+!   man 1 urxvt
+!   man 3 urxvtperl
+!   man 7 urxvt
 
 URxvt.font:                 -zevv-peep-*-*-*-*-14-*-*-*-*-*-*-*
 !Disable bold font
@@ -11,23 +15,33 @@ URxvt.saveLines:            20000
 URxvt.borderLess:           false
 URxvt.depth:                32
 URxvt.buffered:             true
-URxvt.transparent:          true
+!URxvt.background is set below, and is using a transparency value
+!These do not require compositing, (Native Transparency)
+!URxvt.transparent:          true
+!URxvt.shading:              30
+!URxvt.blurRadius:           5
 URxvt.shading:              30
-URxvt.blurRadius:           5
 URxvt.cursorBlink:          true
 URxvt.pointerBlank:         true
 
 !Perl Extension Stuff
-URxvt.perl-ext-common:      default,url-select,vtwheel,keyboard-select,font-size
+URxvt.perl-ext-common:      default,matcher,url-select,vtwheel,keyboard-select
 URxvt.urlLauncher:          /usr/bin/firefox
 URxvt.matcher.button:       1
 URxvt.underlineURLs:        true
 
 !Keyboard shortcuts
-URxvt.keysym.C-=:           perl:font-size:increase
-URxvt.keysym.C--:           perl:font-size:decrease
-URxvt.keysym.C-n:           perl:url-select:select_next
-URxvt.keysym.C-Escape:      perl:keyboard-select:activate
+!These are kept here for the sake of readability
+!Under perl-ext-common, the keyboard shortcut can be placed after the extension in <>
+!url-select<M-u>
+!keyboard-select<M-Escape>
+URxvt.keysym.M-u:           perl:url-select:select_next
+URxvt.keysym.M-Escape:      perl:keyboard-select:activate
+
+!Make Ctrl-<-+=> change between three font sizes
+URxvt.keysym.C-minus:       command:\033]710;-zevv-peep-*-*-*-*-14-*-*-*-*-*-*-*\007
+URxvt.keysym.C-equal:       command:\033]710;-zevv-peep-*-*-*-*-16-*-*-*-*-*-*-*\007
+URxvt.keysym.C-plus:        command:\033]710;-zevv-peep-*-*-*-*-20-*-*-*-*-*-*-*\007
 
 !Colorscheme based on jellebeans colorscheme for vim
 !Regular colors are true to original, brights are mostly saturation increases
@@ -56,12 +70,14 @@ URxvt.color14     : #00afff
 URxvt.color7      : #e8e8d3
 URxvt.color15     : #ffffff
 !!TXT Normal, Normal, Cursor
-URxvt.background  : #151515
+![80] is the transparancy value of URXVT, this requires compositing (True Transparency)
+URxvt.background  : [80]#151515
 URxvt.foreground  : #e8e8d3
 URxvt.cursorColor : #b0d0f0
 !!HLT Include, StatusLine, ErrorMsg
 !URxvt.colorBD     : #dddddd
-!URxvt.colorUL     : #ccdc90
+!Underline color, for our url highlighter
+URxvt.colorUL     : #00afff
 !URxvt.colorIT     : #80d4aa
 
 !-----------------------------------------------------------------------------
