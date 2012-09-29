@@ -9,7 +9,7 @@ export PATH="/home/zirro/cfg/bin:$PATH";
 
 wallpaperShuffle &
 
-xcompmgr -f -I .075 -O .075 -D 10 -c -r 20 -o .8 -C &
+#xcompmgr -f -I .075 -O .075 -D 10 -c -r 20 -o .8 -C &
 
 #Load /etc/X11/xinit/xinitrc.d
 if [ -d /etc/X11/xinit/xinitrc.d ]; then

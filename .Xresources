@@ -17,14 +17,14 @@ URxvt.depth:                32
 URxvt.buffered:             true
 !URxvt.background is set below, and is using a transparency value
 !These do not require compositing, (Native Transparency)
-!URxvt.transparent:          true
-!URxvt.shading:              30
-!URxvt.blurRadius:           5
+URxvt.transparent:          true
 URxvt.shading:              30
+URxvt.blurRadius:           5
 URxvt.cursorBlink:          true
 URxvt.pointerBlank:         true
 
 !Perl Extension Stuff
+URxvt.perl-lib:             $HOME/.urxvt/ext
 URxvt.perl-ext-common:      default,matcher,url-select,vtwheel,keyboard-select
 URxvt.urlLauncher:          /usr/bin/firefox
 URxvt.matcher.button:       1
@@ -33,8 +33,6 @@ URxvt.underlineURLs:        true
 !Keyboard shortcuts
 !These are kept here for the sake of readability
 !Under perl-ext-common, the keyboard shortcut can be placed after the extension in <>
-!url-select<M-u>
-!keyboard-select<M-Escape>
 URxvt.keysym.M-u:           perl:url-select:select_next
 URxvt.keysym.M-Escape:      perl:keyboard-select:activate
 
@@ -87,8 +85,8 @@ Xft.antialias:      true
 
 !-----------------------------------------------------------------------------
 ! xpdf
-xpdf.antialias:     yes
-xpdf.enableFreetype:yes
+xpdf.antialias:         yes
+xpdf.enableFreetype:    yes
 xpdf.foreground:        black
 xpdf.background:        white
 xpdf.urlCommand:        /usr/bin/firefox %s

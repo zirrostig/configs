@@ -34,6 +34,8 @@ setopt NOMATCH
 setopt NUMERIC_GLOB_SORT
 setopt REMATCH_PCRE         #Perl-Style Regex :)
 setopt EXTENDEDGLOB
+autoload -U compinit
+compinit
 
 ###History Settings
 HISTFILE=$HOME/.zsh_hist
