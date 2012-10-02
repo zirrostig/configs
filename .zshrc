@@ -112,3 +112,10 @@ export WINEARCH="win32";
 function tecshw {
     /home/zirro/csm/f12/csci410/tecs/HardwareSimulator.sh $PWD/$1
 }
+function tecsasm {
+    if [ $# -ge 1 ]; then
+        /home/zirro/csm/f12/csci410/tecs/Assembler.sh $PWD/$1 $PWD/$2
+    else
+        /home/zirro/csm/f12/csci410/tecs/Assembler.sh $PWD/$1
+    fi
+}
