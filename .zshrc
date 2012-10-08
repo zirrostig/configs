@@ -15,6 +15,14 @@ RPROMPT="%F{yellow}%*%f"                 #Displays: *** HH:mm:ss (%*)
 PS2="%_ > "
 PS4="%_ %i>> "
 
+preexec () {
+    if [[ "$TERM" == "rxvt-unicode-256color" ]]; then
+        local CMD=${1[(wr)^(*=*|sudo|-*)]}
+        printf '\33]2;%s\007' "T: $CMD"
+    fi
+}
+
+
 ###Misc Options
 setopt DVORAK       #Dvorak keymap is used for smart spelling correction
 setopt C_BASES      #Output hex as 0x... rather than 16#...
