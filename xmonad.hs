@@ -37,11 +37,13 @@ import XMonad.Util.NamedScratchpad
 
 import Graphics.X11.ExtraTypes.XF86
 
-import System.IO
+import System.Directory
 import System.Exit
+import System.FilePath.Posix
+import System.IO
 import System.Posix.Unistd
 
-import Control.Monad((<=<))
+import Control.Monad((<=<), liftM)
 import Control.Applicative((<$>))
 import Data.Ratio ((%))
 
@@ -54,7 +56,6 @@ import qualified XMonad.Util.ExtensibleState as XS
 --Helper Functions--
 --------------------
 hostname = nodeName <$> getSystemID
-
 
 ---------------------------------------
 --Default Settings for various things--
@@ -95,15 +96,15 @@ myGSColorizer = colorRangeFromClassName
 -------------------
 --Prompt Settings--
 -------------------
-myXPConfig :: XPConfig
 myXPConfig = greenXPConfig { font = "xft:DejaVu Serif:pixelsize=12:autohint=true" }
 
 ---------------------
 --Keyboard Bindings--
 ---------------------
-myKeys host conf = M.fromList $ [
+myKeys host home conf = M.fromList $ [
           --Mostly Defaults
             ((modKey   .|. shiftMask, xK_Return                ), spawn $ XMonad.terminal conf                   )  -- launch a terminal
+          , ((modKey   .|. controlMask, xK_Return              ), safeSpawn (combine home "atm/lastDir") []      )
           , ((modKey   .|. shiftMask, xK_c                     ), kill                                           )  -- Close focused window
           , ((modKey                , xK_space                 ), sendMessage NextLayout                         )  -- Rotate through the available layout algorithms
           , ((modKey   .|. shiftMask, xK_space                 ), setLayout $ XMonad.layoutHook conf             )  -- Reset the layouts on the current workspace to default
@@ -150,8 +151,8 @@ myKeys host conf = M.fromList $ [
           --Lock Computer
           , ((modKey   .|. shiftMask, xK_z                     ), spawn "slimlock"                               )  -- Locks screen with slimlock
           --Restarting/Closing XMonad
-          , ((modKey   .|. shiftMask, xK_apostrophe            ), io (exitWith ExitSuccess)                      )  -- Quits XMonad
-          , ((modKey                , xK_apostrophe            ), spawn "if type xmonad; then xmonad --recompile; xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")  -- Restarts XMonad
+          , ((modKey   .|. shiftMask, xK_apostrophe            ), io exitSuccess                                 )  -- Quits XMonad
+          , ((modKey                , xK_apostrophe            ), spawn "if type xmonad; then xmonad --recompile; pkill dzen2; xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")  -- Restarts XMonad
           --GridSelect Controls
           , ((modKey                , xK_g                     ), submap . M.fromList $
               [ ((0             , xK_g    ), goToSelected $ gsconfig2 myGSColorizer                              )  -- Displays grid of running apps, select one to go to it
@@ -194,8 +195,7 @@ myKeys host conf = M.fromList $ [
 --Default Application Startup, Dock is in main--
 ------------------------------------------------
 startupApps     = do
-    safeSpawnProg "urxvtd"              --Daemon running my terminals, reduces resource usage and improves preformance
-    safeSpawnProg "urxvtc"
+    safeSpawnProg "urxvtd" --Daemon running my terminals, reduces resource usage and improves preformance
     safeSpawnProg "xcape"  --Keyboard Daemon, intercepts Control, and sends Escape on short presses of Control, otherwise sends Control
 
 ---------------
@@ -203,12 +203,12 @@ startupApps     = do
 ---------------
 
 -- The manage hook declarations for these do not work, so they are handled below in myManageHook
-scratchpads = [ NS "forth" "urxvtc -name sp_forth -e gforth"            (resource =? "sp_forth")     defaultFloating
-              , NS "haskell" "urxvtc -name sp_haskell -e ghci"          (resource =? "sp_haskell")   defaultFloating
-              , NS "htop" "urxvtc -name sp_htop -e htop"                (resource =? "sp_htop")      defaultFloating
-              , NS "notes" "gvim --role sp_notes ~/doc/notes/notes.txt" (role =? "sp_notes")         defaultFloating
-              , NS "python" "urxvtc -name sp_python -e bpython"         (resource =? "sp_python")    defaultFloating
-              , NS "todo" "gvim --role sp_notes ~/doc/notes/todo.txt"   (role =? "sp_todo")          defaultFloating
+scratchpads = [ NS "forth"    "urxvt -name sp_forth -e gforth"              (resource =? "sp_forth" )  defaultFloating
+              , NS "haskell"  "urxvt -name sp_ghci -e ghci"                 (resource =? "sp_ghci"  )  defaultFloating
+              , NS "htop"     "urxvt -name sp_htop -e htop"                 (resource =? "sp_htop"  )  defaultFloating
+              , NS "notes"    "gvim -name sp_notes ~/doc/notes/notes.txt"   (resource =? "sp_notes" )  defaultFloating
+              , NS "python"   "urxvt -name sp_python -e bpython"            (resource =? "sp_python")  defaultFloating
+              , NS "todo"     "gvim -name sp_todo ~/doc/notes/todo.txt"     (resource =? "sp_todo"  )   defaultFloating
               ] where role = stringProperty "WM_WINDOW_ROLE"
 
 
@@ -253,16 +253,11 @@ q ^? x = (L.isPrefixOf x) <$> q
 
 myManageHook    = composeAll
     [ className =? "Firefox"            --> doShift "web"
-    , className =? "Iceweasel"          --> doShift "web"
     , className =? "Chromium"           --> doShift "web"
-    , className =? "Pidgin"             --> insertPosition End Older <+> doShift "messaging"
-    , className =? "xchat"              --> doShift "messaging"
     , className =? "Gimp"               --> doFloat             --Lets Gimp Windows Float by default
-    , title     =? "pinentry"           --> doFloat
     , className =? "MPlayer"            --> doFloat             --MPlayer windows don't get docked
     , className =? "Spotify"            --> doShift "media"
     , resource  ^? "sp_"                --> doFloat
-    , role      ^? "sp_"                --> doFloat
     , isFullscreen                      --> doFullFloat         --Good catch all for full screen video, smartBorders is also used on the layoutHook
     ] where role = stringProperty "WM_WINDOW_ROLE"
 
@@ -289,7 +284,7 @@ fullLayout      = noBorders Full
 tiledLayout     = Tall 1 (1/50) (1/2)
 mosaicLayout    = MosaicAlt M.empty
 tabbedLayout    = tabbed shrinkText defaultTheme
-comboTabed      = combineTwo (tiledLayout) (tabbedLayout) (tabbedLayout)
+comboTabed      = combineTwo tiledLayout tabbedLayout tabbedLayout
 
 --------------------------------
 --Log Hook (aka. dzen2 output)--
@@ -325,6 +320,7 @@ myLogHook pipe = defaultPP
 ---------------------
 main = do
     host            <- hostname
+    homeDir         <- getHomeDirectory
     dzenStatusBar   <- spawnPipe $ myStatusDzen host
     conkyStatusBar  <- spawnPipe $ myStatusConky host
     -- startupApps
@@ -333,7 +329,7 @@ main = do
           terminal        = myTerminal
         , modMask         = myModKey host
         , workspaces      = myWorkspaces
-        , keys            = myKeys host
+        , keys            = myKeys host homeDir
         , layoutHook      = avoidStruts $ smartBorders $ windowNavigation $ myLayoutHook     -- smartBorders removes borders if only one window or a fullscreen floating window is up
         , manageHook      = myManageHook <+> manageDocks
         , handleEventHook = docksEventHook
