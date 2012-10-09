@@ -6,10 +6,11 @@
 ################################################################################
 ### Misc Options
 ################################################################################
-setopt DVORAK       #Dvorak keymap is used for smart spelling correction
-setopt C_BASES      #Output hex as 0x... rather than 16#...
-setopt C_PRECEDENCES #Change order of opts to be more c like
-unsetopt BEEP       #No Annoying beep
+setopt DVORAK               #Dvorak keymap is used for smart spelling correction
+setopt C_BASES              #Output hex as 0x... rather than 16#...
+setopt C_PRECEDENCES        #Change order of opts to be more c like
+#setopt INTERACTIVE_COMMENTS #Allows comments in the shell
+unsetopt BEEP               #No Annoying beep
 
 ################################################################################
 ### Directory Options
@@ -28,6 +29,7 @@ setopt NOMATCH
 setopt NUMERIC_GLOB_SORT
 setopt REMATCH_PCRE         #Perl-Style Regex :)
 setopt EXTENDEDGLOB
+setopt EQUALS               # =exe expands to `which exe`
 autoload -U compinit && compinit
 
 ################################################################################
@@ -36,9 +38,11 @@ autoload -U compinit && compinit
 HISTFILE=$HOME/.zsh_hist
 HISTSIZE=65536
 SAVEHIST=65536
-setopt HIST_IGNORE_DUPS     #if command matches previous, don't write to history
+setopt HIST_IGNORE_ALL_DUPS #if command is in history, remove older entry, write
+                            # newer
 setopt HIST_IGNORE_SPACE    #if command begins with space don't write to history
 setopt HIST_REDUCE_BLANKS
+setopt HIST_NO_STORE        #Don't store history commands
 setopt APPEND_HISTORY       #Good for running multiple zsh sessions
                             # simultaneously
 setopt BANG_HIST
@@ -102,6 +106,14 @@ function preexec {
         #my_lastcmd=${1[(wr)^(*=*|sudo|-*)]}
         my_lastcmd=$1
         printf '\33]2;%s\007' "- $my_lastcmd"
+    fi
+}
+
+#Executed whenever I change directories
+function chpwd {
+    if [[ -d $HOME/atm ]]; then
+        echo "#!$( which sh )\nurxvtc -cd $PWD" > $HOME/atm/lastDir
+        chmod +x $HOME/atm/lastDir
     fi
 }
 
@@ -245,7 +257,7 @@ function setprompt() {
     pet=@
     dungeon_width=4
 
-    #Username & Host
+    #Host
     infoline+="${cyan}%m${reset} "
 
     #Current Directory
@@ -258,11 +270,11 @@ function setprompt() {
     #This is awesome
     zstyle -T ":pr-nethack:" show-pet && i_pad=$(( $dungeon_width+1 )) || i_pad=0
 
-    # Strip color to find text width & make the full-width filler
+#    # Strip color to find text width & make the full-width filler
 #    i_width=${(S)infoline//\%\{*?\%\}} # search-and-replace color escapes
 #    i_width=${#${(%)i_width}} # expand all escapes and count the chars
 
-    #This fills the width of the terminal with a filler character
+#    #This fills the width of the terminal with a filler character
 #    filler="${cyan}${(l:$(( $COLUMNS - $i_width - $i_pad ))::.:)}${reset}"
 #    infoline[3]=( "${infoline[3]} ${filler} " )
 
@@ -298,8 +310,11 @@ venv_rprompt() {
 
     #If we're in a virtual environment, make it known
     if [[ -n $VIRTUAL_ENV ]]; then
-        line="${line}${red}venv:$(basename $VIRTUAL_ENV)${reset}"
+        line+="${red}venv:$(basename $VIRTUAL_ENV)${reset}"
     fi
+
+#    #Add Time Since EPOCH in seconds
+#    line+=" ${cyan}$EPOCHSECONDS${reset}"
 
     RPROMPT=$line
 }
