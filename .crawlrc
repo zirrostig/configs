@@ -1,0 +1,53 @@
+#Start Screen
+name = zirro
+remember_name = true
+use_old_selection_order = false
+
+#File Settings
+morgue_dir = .crawl/morgue/
+save_dir = .crawl/saves/
+
+#Pickup/Drop
+autopickup = $?!\/%=0
+
+#Branding
+friend_brand = hi:green
+neutral_brand = hi:darkgrey
+stab_brand = hi:blue
+may_stab_brand = hi:lightblue
+heap_brand = reverse
+feture_item_brand = reverse
+trap_item_brand = reverse
+verbose_monster_pane = true
+
+#Map
+level_map_title = true
+item_colour = true
+
+#Viewport
+view_max_width = 60
+view_max_height = 40
+view_lock_x = true
+view_lock_y = true
+scroll_margin_x = 5
+scroll_margin_y = 3
+
+#Travel/Exploration
+travel_delay = 35
+explore_stop = items,greedy_pickup,greedy_items,stairs,shops,altars,gates,artefacts,runes
+
+#Messages
+mp_warning = 10
+delay_message_clear = true
+show_inventory_weights = true
+show_gold_turns = true
+msg_max_height = 20
+#mlist_allow_alternate_layout = true #Causes Crash
+#mlist_targetting = true
+
+#Window Settings
+#tile_full_screen = true
+#tile_window_width = 1900
+#tile_window_height = 1000
+#tile_map_pixels = 3
+#tile_layout_priority = minimap, gold_turn, command, spell, monster
