@@ -120,6 +120,10 @@ function rationalise-dot {
     fi
 }
 
+function reload {
+    source $HOME/.zshrc
+}
+
 zle -N rationalise-dot
 bindkey . rationalise-dot
 
@@ -178,7 +182,7 @@ zstyle ':vcs_info:git:*' get-revision true
 zstyle ':vcs_info:git:*' check-for-changes true
 
 zstyle ':vcs_info:git*' formats "(%s) %12.12i %c%u %b%m" # hash changes branch misc
-zstyle ':vcs_info:git*' actionformats "(%s|${white}%a${gray}) %12.12i %c%u %b%m"
+zstyle ':vcs_info:git*' actionformats "(%s|${white}%a${red}) %12.12i %c%u %b%m"
 
 zstyle ':vcs_info:git*:*' stagedstr "${green}S${blue}"
 zstyle ':vcs_info:git*:*' unstagedstr "${red}U${yellow}"
@@ -198,12 +202,12 @@ function +vi-git-st() {
         # for git prior to 1.7
         # ahead=$(git rev-list origin/${hook_com[branch]}..HEAD | wc -l)
         ahead=$(git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
-        (( $ahead )) && gitstatus+=( "${green}+${ahead}${gray}" )
+        (( $ahead )) && gitstatus+=( "${green}+${ahead}${red}" )
 
         # for git prior to 1.7
         # behind=$(git rev-list HEAD..origin/${hook_com[branch]} | wc -l)
         behind=$(git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
-        (( $behind )) && gitstatus+=( "${red}-${behind}${gray}" )
+        (( $behind )) && gitstatus+=( "${red}-${behind}${red}" )
 
         hook_com[branch]="${hook_com[branch]} [${remote} ${(j:/:)gitstatus}]"
     fi
@@ -227,7 +231,7 @@ function +vi-git-untracked() {
     untracked=${$(git ls-files --exclude-standard --others | head -n 1)}
 
     if [[ -n ${untracked} ]] ; then
-        hook_com[unstaged]="${hook_com[unstaged]}${yellow}?${gray}"
+        hook_com[unstaged]="${hook_com[unstaged]}${yellow}?${red}"
     fi
 }
 
@@ -240,6 +244,9 @@ function setprompt() {
     pet=@
     dungeon_width=4
 
+    #Username & Host
+    infoline+="${cyan}%m${reset} "
+
     #Current Directory
     if [[ -w $PWD ]] ;
         then infoline+=${green}
@@ -247,23 +254,21 @@ function setprompt() {
     fi
     infoline+="%4/${reset}"     #Current Directory (out to 4 directories)- $4/
 
-    #Username & Host
-    infoline+="$blue%m$reset"
-
     #This is awesome
     zstyle -T ":pr-nethack:" show-pet && i_pad=$(( $dungeon_width+1 )) || i_pad=0
 
     # Strip color to find text width & make the full-width filler
-    i_width=${(S)infoline//\%\{*?\%\}} # search-and-replace color escapes
-    i_width=${#${(%)i_width}} # expand all escapes and count the chars
+#    i_width=${(S)infoline//\%\{*?\%\}} # search-and-replace color escapes
+#    i_width=${#${(%)i_width}} # expand all escapes and count the chars
 
-    filler="${blue}${(l:$(( $COLUMNS - $i_width - $i_pad ))::-:)}${reset}"
-    infoline[2]=( "${infoline[2]} ${filler} " )
+    #This fills the width of the terminal with a filler character
+#    filler="${cyan}${(l:$(( $COLUMNS - $i_width - $i_pad ))::.:)}${reset}"
+#    infoline[3]=( "${infoline[3]} ${filler} " )
 
      ### Now, assemble all prompt lines
     lines+=( ${(j::)infoline} )
     [[ -n ${vcs_info_msg_0_} ]] && lines+="${yellow}${vcs_info_msg_0_}${reset}"
-    lines+="%(1j.${blue}%j${reset} .)%(0?.${white}.${red})%#${reset} "
+    lines+="%(1j.${blue}%j${reset} .)%(0?.${white}.${red})%? %#${reset} "
 
     ### Add dungeon floor to each line
     # Allow easy toggling of pet display:
@@ -282,11 +287,20 @@ function setprompt() {
 }
 
 venv_rprompt() {
+    local line nextdir
+
+    #Add first element on the directory stack to the prompt
+    #Get the next element on the directory stack
+    nextdir=${(w)dirstack[1]}
+    nextdir=${nextdir/$HOME/\~}         #Replace /home/user with '~'
+    line="${cyan}${nextdir}${reset}"
+
+    #If we're in a virtual environment, make it known
     if [[ -n $VIRTUAL_ENV ]]; then
-        RPROMPT="${white} venv:$(basename $VIRTUAL_ENV)${reset}"
-    else
-        RPROMPT=""
+        line="${line}${red}venv:$(basename $VIRTUAL_ENV)${reset}"
     fi
+
+    RPROMPT=$line
 }
 
 ##Prompt generation
