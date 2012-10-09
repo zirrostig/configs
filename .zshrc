@@ -126,6 +126,7 @@ function reload {
 
 zle -N rationalise-dot
 bindkey . rationalise-dot
+bindkey -s '`' '~/'
 
 ################################################################################
 ### Various Exports
@@ -166,7 +167,7 @@ autoload -Uz vcs_info
 autoload -U colors && colors
 
 #Easier Color Usage
-local reset white gray green red
+local reset white gray green red cyan blue yellow
 reset="%{${reset_color}%}"
 white="%{$fg[white]%}"
 gray="%{$fg[black]%}"
