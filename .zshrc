@@ -146,6 +146,8 @@ function tecsasm {
 
 ################################################################################
 ### My Prompt
+# A lot of this came from Seth House's Prompt found here \/
+#  https://github.com/whiteinge/dotfiles/blob/master/.zsh_shouse_prompt
 ################################################################################
 #Settings
 setopt PROMPT_SUBST             #Allows variable expansion in the prompt string
@@ -163,8 +165,10 @@ autoload -U colors && colors
 local reset white gray green red
 reset="%{${reset_color}%}"
 white="%{$fg[white]%}"
+gray="%{$fg[black]%}"
 green="%{$fg[green]%}"
 blue="%{$fg[blue]%}"
+cyan="%{$fg[cyan]%}"
 red="%{$fg[red]%}"
 yellow="%{$fg[yellow]%}"
 
@@ -176,8 +180,8 @@ zstyle ':vcs_info:git:*' check-for-changes true
 zstyle ':vcs_info:git*' formats "(%s) %12.12i %c%u %b%m" # hash changes branch misc
 zstyle ':vcs_info:git*' actionformats "(%s|${white}%a${gray}) %12.12i %c%u %b%m"
 
-zstyle ':vcs_info:git*:*' stagedstr "${green}S${gray}"
-zstyle ':vcs_info:git*:*' unstagedstr "${red}U${gray}"
+zstyle ':vcs_info:git*:*' stagedstr "${green}S${blue}"
+zstyle ':vcs_info:git*:*' unstagedstr "${red}U${yellow}"
 
 zstyle ':vcs_info:git*+set-message:*' hooks git-st git-stash git-untracked
 
@@ -229,48 +233,48 @@ function +vi-git-untracked() {
 
 function setprompt() {
     local -a lines infoline
-    local x i pet dungeon filler i_width i_pad
+    local  i filler i_width i_pad
 
-    #My pet
+    #My pet and dungeon settings
+    local x pet dungeon dungeon_width
     pet=@
+    dungeon_width=4
 
     #Current Directory
     if [[ -w $PWD ]] ;
-        then infoline+=${green} || infoline+=${yellow}
-        else infoline+="%4/${reset}"
+        then infoline+=${green}
+        else infoline+=${yellow}
     fi
+    infoline+="%4/${reset}"     #Current Directory (out to 4 directories)- $4/
 
     #Username & Host
-    infoline+="%n"
-    infoline+="%m"
+    infoline+="$blue%m$reset"
 
-    zstyle -T ":pr-nethack:" show-pet && i_pad=4 || i_pad=0
+    #This is awesome
+    zstyle -T ":pr-nethack:" show-pet && i_pad=$(( $dungeon_width+1 )) || i_pad=0
 
     # Strip color to find text width & make the full-width filler
     i_width=${(S)infoline//\%\{*?\%\}} # search-and-replace color escapes
     i_width=${#${(%)i_width}} # expand all escapes and count the chars
 
-
-    filler="${blue}${(l:$(( $COLUMNS - $i_width - $i_pad ))::.:)}${reset}"
+    filler="${blue}${(l:$(( $COLUMNS - $i_width - $i_pad ))::-:)}${reset}"
     infoline[2]=( "${infoline[2]} ${filler} " )
 
      ### Now, assemble all prompt lines
     lines+=( ${(j::)infoline} )
-    [[ -n ${vcs_info_msg_0_} ]] && lines+="${gray}${vcs_info_msg_0_}${reset}"
+    [[ -n ${vcs_info_msg_0_} ]] && lines+="${yellow}${vcs_info_msg_0_}${reset}"
     lines+="%(1j.${blue}%j${reset} .)%(0?.${white}.${red})%#${reset} "
 
     ### Add dungeon floor to each line
     # Allow easy toggling of pet display:
     # zstyle ':pr-nethack:' show-pet false
     if zstyle -T ":pr-nethack:" show-pet ; then
-        dungeon=${(l:$(( ${#lines} * 3 ))::.:)}
+        dungeon=${(l:$(( ${#lines} * $dungeon_width ))::.:)}
         dungeon[$[${RANDOM}%${#dungeon}]+1]=$pet
 
         for (( i=1; i < $(( ${#lines} + 1 )); i++ )) ; do
-            case $i in
-                1) x=1;; 2) x=4;; 3) x=7;; 4) x=10;;
-            esac
-            lines[$i]="${red}${dungeon[x,$(( $x + 2 ))]} ${lines[$i]}${reset}"
+            x=$(( 1 + ( $i - 1 ) * $dungeon_width ))
+            lines[$i]="${red}${dungeon[x,$(( $x + $dungeon_width - 1 ))]} ${lines[$i]}${reset}"
         done
     fi
 
@@ -278,7 +282,11 @@ function setprompt() {
 }
 
 venv_rprompt() {
-
+    if [[ -n $VIRTUAL_ENV ]]; then
+        RPROMPT="${white} venv:$(basename $VIRTUAL_ENV)${reset}"
+    else
+        RPROMPT=""
+    fi
 }
 
 ##Prompt generation
