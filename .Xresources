@@ -18,7 +18,7 @@ URxvt.buffered:             true
 !URxvt.background is set below, and is using a transparency value
 !These do not require compositing, (Native Transparency)
 URxvt.transparent:          true
-URxvt.shading:              30
+URxvt.shading:              10
 URxvt.blurRadius:           5
 URxvt.cursorBlink:          true
 URxvt.pointerBlank:         true
