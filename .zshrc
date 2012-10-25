@@ -222,7 +222,7 @@ function +vi-git-st() {
         behind=$(git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
         (( $behind )) && gitstatus+=( "${red}-${behind}${red}" )
 
-        hook_com[branch]="${hook_com[branch]} [${remote} ${(j:/:)gitstatus}]"
+        hook_com[branch]="${hook_com[branch]} [${remote}${(j:/:)gitstatus}]"
     fi
 }
 
