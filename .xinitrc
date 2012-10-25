@@ -38,6 +38,7 @@ fi
 
 xset r rate 300 25
 xrdb -merge ~/.Xresources
+xcape &
 
 dropboxd start &
 
