@@ -90,12 +90,6 @@ function precmd {
     vcs_info
     setprompt
     venv_rprompt
-
-    #Change urxvt's title to be the last command and current directory to 2 dirs
-    if [[ "$TERM" == "rxvt-unicode-256color" ]]; then
-        local dir=${(%):-%2/}
-        printf '\33]2;%s\007' "% $my_lastcmd : $dir"
-    fi
 }
 
 #Executed before the command is executed, after the enter key is pressed
@@ -114,6 +108,12 @@ function chpwd {
     if [[ -d $HOME/atm ]]; then
         echo "#!$( which sh )\nurxvtc -cd $PWD" > $HOME/atm/lastDir
         chmod +x $HOME/atm/lastDir
+    fi
+
+    #Change urxvt's title to be the current directory to 2 dirs
+    if [[ "$TERM" == "rxvt-unicode-256color" ]]; then
+        local dir=${(%):-%2/}
+        printf '\33]2;%s\007' "% $dir"
     fi
 }
 
