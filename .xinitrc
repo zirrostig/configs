@@ -24,6 +24,8 @@ export PATH="${PATH}:/home/zirro/.gem/ruby/1.9.1/bin:/home/zirro/.gem/ruby/1.8/b
 export PATH="/home/zirro/app/bin:${PATH}";
 export PATH="/home/zirro/cfg/bin:${PATH}";
 
+WINEARCH=win64
+
 wallpaperShuffle &
 
 #xcompmgr -f -I .075 -O .075 -D 10 -c -r 20 -o .8 -C &
