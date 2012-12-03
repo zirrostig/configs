@@ -5,7 +5,7 @@
 !   man 3 urxvtperl
 !   man 7 urxvt
 
-URxvt.font:                 -zevv-peep-*-*-*-*-14-*-*-*-*-*-*-*
+URxvt.font:                 -zevv-peep-*-*-*-*-14-*-*-*-*-*-*-*, xft:Anonymous Pro:size=10
 !Disable bold font
 URxvt.boldFont:             -zevv-peep-*-*-*-*-14-*-*-*-*-*-*-*
 URxvt.letterSpace:          0

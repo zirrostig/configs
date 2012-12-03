@@ -90,6 +90,10 @@ function precmd {
     vcs_info
     setprompt
     venv_rprompt
+
+    if [[ "$TERM" == "rxvt-unicode-256color" ]]; then
+        printf '\33]2;%% %s\007' "$PWD"
+    fi
 }
 
 #Executed before the command is executed, after the enter key is pressed
@@ -145,7 +149,7 @@ bindkey -s '`' '~/'
 ################################################################################
 export EDITOR="vim";
 export BROWSER="firefox";
-export WINEARCH="win32";
+export WINEARCH="win64";
 
 ################################################################################
 ### CSCI410 Tecs HW Sim
