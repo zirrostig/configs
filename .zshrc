@@ -164,6 +164,12 @@ function tecsasm {
         /home/zirro/csm/f12/csci410/tecs/Assembler.sh $PWD/$1
     fi
 }
+function tecsc {
+    /home/zirro/csm/f12/csci410/tecs/JackCompiler.sh $PWD/$1
+}
+function tecsvm {
+    /home/zirro/csm/f12/csci410/tecs/VMEmulator.sh
+}
 
 ################################################################################
 ### My Prompt
