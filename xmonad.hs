@@ -194,9 +194,7 @@ myKeys host home conf = M.fromList $ [
 ------------------------------------------------
 --Default Application Startup, Dock is in main--
 ------------------------------------------------
-startupApps     = do
-    safeSpawnProg "urxvtd" --Daemon running my terminals, reduces resource usage and improves preformance
-    safeSpawnProg "xcape"  --Keyboard Daemon, intercepts Control, and sends Escape on short presses of Control, otherwise sends Control
+startupApps = safeSpawnProg "urxvtd" --Daemon running my terminals, reduces resource usage and improves preformance
 
 ---------------
 --Scratchpads--
@@ -257,6 +255,10 @@ myManageHook    = composeAll
     , className =? "Gimp"               --> doFloat             --Lets Gimp Windows Float by default
     , className =? "MPlayer"            --> doFloat             --MPlayer windows don't get docked
     , className =? "Spotify"            --> doShift "media"
+    , className =? "Wine"               --> doFloat
+    , className =? "Steam"              -->doFloat
+    , className =? "steam"              -->doFullFloat --bigpicture-mode
+    , className =? "Steam"              -->doIgnore
     , resource  ^? "sp_"                --> doFloat
     , isFullscreen                      --> doFullFloat         --Good catch all for full screen video, smartBorders is also used on the layoutHook
     ] where role = stringProperty "WM_WINDOW_ROLE"
