@@ -81,6 +81,7 @@ alias killFlash='~/.killFlash.sh'
 alias connectToSimon='ssh -Nfq -L 2676:simon.mines.edu:22 zstigall@imagine.mines.edu'
 alias makeJavaWindowsWork='wmname LG3D'
 alias vim=gvim
+alias pacman=pacman-color
 
 ################################################################################
 ### Functions
@@ -138,6 +139,13 @@ function rationalise-dot {
 
 function reload {
     source $HOME/.zshrc
+}
+
+function vboxRawDisk {
+    if [[ $# == 0 ]] || [[ $1 == '-h' ]] || [[ $1 == '--help' ]]
+    then echo 'USAGE: vboxRawDisk vmdkFileName rawDisk'
+    else sudo VBoxManage internalcommands createrawvmdk -filename $1 -rawdisk $2
+    fi
 }
 
 zle -N rationalise-dot
