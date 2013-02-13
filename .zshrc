@@ -17,9 +17,6 @@ setopt MULTIOS              #Allows multiple io redirects
 ### Directory Options
 ################################################################################
 setopt AUTO_CD      #cd not necessary anymore
-setopt CD_ABLE_VARS #cd can use variables without $. eg. cd foo/bar will use 
-                    #cd $foo/bar if dir foo doesn't exist and $foo points to a
-                    #directory
 
 ################################################################################
 ### Completion Options, Expansion, Globbing
@@ -86,15 +83,6 @@ alias connectToSimon='ssh -Nfq -L 2676:simon.mines.edu:22 zstigall@imagine.mines
 alias makeJavaWindowsWork='wmname LG3D'
 alias vim=gvim
 alias pacman=pacman-color
-
-################################################################################
-### Dir Vars (For use with CD_ABLE_VARS
-################################################################################
-if [[ "$HOST" == "thwomp" ]]; then
-    dl=$HOME/dl
-    csm=$HOME/csm
-    sc=$HOME/sc
-fi
 
 ################################################################################
 ### Functions
