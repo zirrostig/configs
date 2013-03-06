@@ -78,7 +78,7 @@ dzenFont h
   | h == "darknut" = "dejavu serif-10"
   | h == "thwomp"  = "dejavu serif-8"
   | otherwise      = "dejavu serif-10"
-myDzenOpts h = " -fg '" ++ dzenFG ++ "' -bg '" ++ dzenBG ++ "' -fn '" ++ (dzenFont h) ++ "'"
+myDzenOpts h = " -fg '" ++ dzenFG ++ "' -bg '" ++ dzenBG ++ "' -fn '" ++ dzenFont h ++ "'"
 
 ----------------------
 --Grid Select Config--
@@ -256,9 +256,10 @@ myManageHook    = composeAll
     , className =? "MPlayer"            --> doFloat             --MPlayer windows don't get docked
     , className =? "Spotify"            --> doShift "media"
     , className =? "Wine"               --> doFloat
-    , className =? "Steam"              -->doFloat
-    , className =? "steam"              -->doFullFloat --bigpicture-mode
-    , className =? "Steam"              -->doIgnore
+    , className =? "Steam"              --> doFloat
+    , className =? "steam"              --> doFullFloat --bigpicture-mode
+    , className =? "Steam"              --> doIgnore
+    , className =? "LOT"                --> doShift "dashboard" >> doIgnore
     , resource  ^? "sp_"                --> doFloat
     , isFullscreen                      --> doFullFloat         --Good catch all for full screen video, smartBorders is also used on the layoutHook
     ] where role = stringProperty "WM_WINDOW_ROLE"
@@ -266,7 +267,8 @@ myManageHook    = composeAll
 -----------------------------------------
 --Layouts & Workspaces working together--
 -----------------------------------------
-myLayoutHook    = onWorkspace "terminal"  layoutTerm $
+myLayoutHook    = onWorkspace "dashboard" fullLayout $
+                  onWorkspace "terminal"  layoutTerm $
                   onWorkspace "web"       layoutWeb $
                   onWorkspace "im"        layoutIM $
                   layoutDefault
@@ -332,7 +334,7 @@ main = do
         , modMask         = myModKey host
         , workspaces      = myWorkspaces
         , keys            = myKeys host homeDir
-        , layoutHook      = avoidStruts $ smartBorders $ windowNavigation $ myLayoutHook     -- smartBorders removes borders if only one window or a fullscreen floating window is up
+        , layoutHook      = avoidStruts $ smartBorders $ windowNavigation myLayoutHook     -- smartBorders removes borders if only one window or a fullscreen floating window is up
         , manageHook      = myManageHook <+> manageDocks
         , handleEventHook = docksEventHook
         , logHook         = dynamicLogWithPP $ myLogHook dzenStatusBar

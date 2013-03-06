@@ -352,3 +352,18 @@ venv_rprompt() {
 #RPROMPT="%F{yellow}%*%f"                 #Displays: *** HH:mm:ss (%*)
 PS2="%_ > "
 PS4="%_ %i>> "
+
+###############################################################################
+# Zsh Completion Stuff
+###############################################################################
+
+#SSH config hosts
+if [ -f ~/.ssh/known_hosts ]; then
+    hosts=(`awk '{print $1}' ~/.ssh/known_hosts | tr ',' '\n' `)
+fi
+if [ -f ~/.ssh/config ]; then
+    hosts=($hosts `grep '^Host' ~/.ssh/config | sed 's/Host\ //' | egrep -v '^\*$'`)
+fi
+if [ "$hosts" ]; then
+    zstyle ':completion:*:hosts' hosts $hosts
+fi
