@@ -54,6 +54,11 @@ setopt BANG_HIST
 autoload -U zmv
 autoload -U tetris && zle -N tetris   #Because we can
 
+#Bash like command line edit
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey '\C-x\C-e' edit-command-line
+
 ################################################################################
 ### Zsh Modules
 ################################################################################
