@@ -24,6 +24,7 @@ export WINEARCH=win64
 wallpaperShuffle &
 
 #xcompmgr -f -I .075 -O .075 -D 10 -c -r 20 -o .8 -C &
+cairo-compmgr &
 
 #Load /etc/X11/xinit/xinitrc.d
 if [ -d /etc/X11/xinit/xinitrc.d ]; then
@@ -33,11 +34,11 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
   unset f
 fi
 
-eval $(gpg-agent --daemon) &
+# eval $(gpg-agent --daemon) &
 
 xset r rate 300 25
 xrdb -merge ~/.Xresources
-xcape &
+# xcape &
 
 dropboxd start &
 
