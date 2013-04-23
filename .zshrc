@@ -87,7 +87,6 @@ alias killFlash='~/.killFlash.sh'
 alias connectToSimon='ssh -Nfq -L 2676:simon.mines.edu:22 zstigall@imagine.mines.edu'
 alias makeJavaWindowsWork='wmname LG3D'
 alias vim=gvim
-alias pacman=pacman-color
 
 ################################################################################
 ### Functions
