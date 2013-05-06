@@ -37,6 +37,7 @@ export WINEARCH=win64
 wallpaperShuffle &
 
 #xcompmgr -f -I .075 -O .075 -D 10 -c -r 20 -o .8 -C &
+cairo-compmgr &
 
 #echo 'Doing a bunch of stuff in /etc/X11/xinit/xinitrc.d' >>/tmp/login_xinitrc
 #Load /etc/X11/xinit/xinitrc.d
@@ -48,7 +49,7 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
 fi
 
 #echo 'Starting gpg-agent' >>/tmp/login_xinitrc
-eval $(gpg-agent --daemon) &
+#eval $(gpg-agent --daemon) &
 
 #echo 'Setting Keyboard Repeat' >>/tmp/login_xinitrc
 xset r rate 300 25
@@ -57,7 +58,7 @@ xset r rate 300 25
 xrdb -merge ~/.Xresources
 
 #echo 'Starting xcape' >>/tmp/login_xinitrc
-xcape &
+#xcape &
 
 #echo 'Starting dropbox' >>/tmp/login_xinitrc
 dropboxd start &

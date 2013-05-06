@@ -1,13 +1,50 @@
 !------------------------------------------------------------------------------
+! ColorScheme and font for xterm and urxvt
+
+
+*font:                 -zevv-peep-*-*-*-*-14-*-*-*-*-*-*-*
+!Disable bold font
+*boldFont:             -zevv-peep-*-*-*-*-14-*-*-*-*-*-*-*
+
+!Colorscheme based on jellebeans colorscheme for vim
+!Regular colors are true to original, brights are mostly saturation increases
+!!BLK Cursor
+*color0      : #000000
+*color8      : #000000
+!!!RED Tag
+*color1      : #cf6a4c
+*color9      : #dc3a13
+!!GRN SpecialKey
+*color2      : #99ad6a
+*color10     : #9dca32
+!!YEL Keyword
+*color3      : #dad085
+*color11     : #f5d90b
+!!BLU Number
+*color4      : #668799
+*color12     : #006399
+!!MAG Precondit
+*color5      : #f0a0c0
+*color13     : #f03b84
+!!CYN Float
+*color6      : #8bcbe8
+*color14     : #00afff
+!!WHT Search
+*color7      : #e8e8d3
+*color15     : #ffffff
+!!TXT Normal, Normal, Cursor
+*background  : #151515
+*foreground  : #e8e8d3
+*cursorColor : #b0d0f0
+
+
+!------------------------------------------------------------------------------
 ! URxvt
 !   Three man pages to not forget
 !   man 1 urxvt
 !   man 3 urxvtperl
 !   man 7 urxvt
 
-URxvt.font:                 -zevv-peep-*-*-*-*-14-*-*-*-*-*-*-*, xft:Anonymous Pro:size=10
-!Disable bold font
-URxvt.boldFont:             -zevv-peep-*-*-*-*-14-*-*-*-*-*-*-*
 URxvt.letterSpace:          0
 URxvt.scrollstyle:          plain
 URxvt.saveLines:            20000
@@ -41,37 +78,7 @@ URxvt.keysym.C-minus:       command:\033]710;-zevv-peep-*-*-*-*-14-*-*-*-*-*-*-*
 URxvt.keysym.C-equal:       command:\033]710;-zevv-peep-*-*-*-*-16-*-*-*-*-*-*-*\007
 URxvt.keysym.C-plus:        command:\033]710;-zevv-peep-*-*-*-*-20-*-*-*-*-*-*-*\007
 
-!Colorscheme based on jellebeans colorscheme for vim
-!Regular colors are true to original, brights are mostly saturation increases
-!!BLK Cursor
-URxvt.color0      : #000000
-URxvt.color8      : #000000
-!!!RED Tag
-URxvt.color1      : #cf6a4c
-URxvt.color9      : #dc3a13
-!!GRN SpecialKey
-URxvt.color2      : #99ad6a
-URxvt.color10     : #9dca32
-!!YEL Keyword
-URxvt.color3      : #dad085
-URxvt.color11     : #f5d90b
-!!BLU Number
-URxvt.color4      : #668799
-URxvt.color12     : #006399
-!!MAG Precondit
-URxvt.color5      : #f0a0c0
-URxvt.color13     : #f03b84
-!!CYN Float
-URxvt.color6      : #8bcbe8
-URxvt.color14     : #00afff
-!!WHT Search
-URxvt.color7      : #e8e8d3
-URxvt.color15     : #ffffff
-!!TXT Normal, Normal, Cursor
-![80] is the transparancy value of URXVT, this requires compositing (True Transparency)
-URxvt.background  : [80]#151515
-URxvt.foreground  : #e8e8d3
-URxvt.cursorColor : #b0d0f0
+URxvt.background  : [90]#151515
 !!HLT Include, StatusLine, ErrorMsg
 !URxvt.colorBD     : #dddddd
 !Underline color, for our url highlighter

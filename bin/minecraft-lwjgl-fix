@@ -1,0 +1,74 @@
+#!/bin/bash
+
+#Thanks StackOverflow
+#http://stackoverflow.com/questions/4686464/howto-show-wget-progress-bar-only
+
+progressfilt () {
+    local flag=false c count cr=$'\r' nl=$'\n'
+    while IFS='' read -d '' -rn 1 c
+    do
+        if $flag
+        then
+            printf '%c' "$c"
+        else
+            if [[ $c != $cr && $c != $nl ]]
+            then
+                count=0
+            else
+                ((count++))
+                if ((count > 1))
+                then
+                    flag=true
+                fi
+            fi
+        fi
+    done
+}
+
+[[ $# > 3 ]] && exit 1
+
+if [[ "$1" =~ '^-h' ]]; then
+    echo 'USAGE: minecraft-lwjgl-fix <Minecraft bin directory>'
+    echo '	Will use current dir if there is no argument'
+    exit -1
+fi
+
+# No arg... Use current dir
+[[ $# < 2 ]] && dir=.
+
+echo Backing up old lwjgl files to $dir/lwjgl_original
+#Backup old lwjgl
+backupdir=$dir/lwjgl_original
+mkdir $backupdir
+mv -t $backupdir jinput.jar lwjgl.jar lwjgl_util.jar natives
+
+echo Finding latest lwjgl
+# Download lwjgl latest
+# Got from http://pastebin.com/GZ1K54Ye
+latest=$(wget -q -O - http://lwjgl.org/download.php |\
+    grep -o  "https:\/\/sourceforge.net\/projects\/java-game-lib\/files\/Official%20Releases\/LWJGL%20[0-9|\.]*")
+
+dlurl=$(wget -q -O - "$latest" |\
+        grep -o -m1 "http://sourceforge.net/projects/java-game-lib/files/Official%20Releases/LWJGL%20[0-9|\.]*/lwjgl-[0-9|\.]*.zip")
+
+version=$(grep -o -m1 "%[0-9|\.]*$" <<<$latest | sed s/%20//)
+
+echo Downloading lwjgl-$version
+#Download lwjgl latest
+wget --progress=bar:force -O $dir/lwjgl-latest.zip $dlurl 2>&1 | progressfilt
+
+echo Unpacking
+# jars
+unzip -qq lwjgl-latest.zip lwjgl-$version/jar/{jinput.jar,lwjgl.jar,lwjgl_util.jar} -d $dir
+mv -t $dir $dir/lwjgl-$version/jar/{jinput.jar,lwjgl.jar,lwjgl_util.jar}
+
+# natives
+mkdir $dir/natives
+unzip -qq $dir/lwjgl-latest.zip lwjgl-$version/native/linux/* -d $dir
+mv -t $dir/natives $dir/lwjgl-$version/native/linux/*
+
+echo Cleaning up
+rm -r $dir/lwjgl-$version
+rm $dir/lwjgl-latest.zip
+
+echo Done

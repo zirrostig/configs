@@ -17,9 +17,6 @@ setopt MULTIOS              #Allows multiple io redirects
 ### Directory Options
 ################################################################################
 setopt AUTO_CD      #cd not necessary anymore
-setopt CD_ABLE_VARS #cd can use variables without $. eg. cd foo/bar will use 
-                    #cd $foo/bar if dir foo doesn't exist and $foo points to a
-                    #directory
 
 ################################################################################
 ### Completion Options, Expansion, Globbing
@@ -56,6 +53,11 @@ setopt BANG_HIST
 ################################################################################
 autoload -U zmv
 autoload -U tetris && zle -N tetris   #Because we can
+
+#Bash like command line edit
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey '\C-x\C-e' edit-command-line
 
 ################################################################################
 ### Zsh Modules
@@ -363,3 +365,18 @@ venv_rprompt() {
 #RPROMPT="%F{yellow}%*%f"                 #Displays: *** HH:mm:ss (%*)
 PS2="%_ > "
 PS4="%_ %i>> "
+
+###############################################################################
+# Zsh Completion Stuff
+###############################################################################
+
+#SSH config hosts
+if [ -f ~/.ssh/known_hosts ]; then
+    hosts=(`awk '{print $1}' ~/.ssh/known_hosts | tr ',' '\n' `)
+fi
+if [ -f ~/.ssh/config ]; then
+    hosts=($hosts `grep '^Host' ~/.ssh/config | sed 's/Host\ //' | egrep -v '^\*$'`)
+fi
+if [ "$hosts" ]; then
+    zstyle ':completion:*:hosts' hosts $hosts
+fi

@@ -1,12 +1,28 @@
-#!/bin/sh
+#!/bin/bash
 
 #Shuffles Backgrounds
 backgroundsDir=~/mm/pic/wallpapers
 delay=120s
 
-while true; do
+usr1() {
+    trap 'exit 0' TERM
+    kill $WAITPID
+}
+
+shufflenext() {
     pic=$(find $backgroundsDir -type f \( -name '*.jpg' -o -name '*.png' \) -print0 | shuf -n1 -z )
     feh --bg-max $pic
     echo $pic > ~/atm/wallpaper
-    sleep $delay
-done
+    sleep $delay & WAITPID=$!
+}
+
+main() {
+    trap usr1 SIGUSR1
+    while true; do
+        shufflenext
+        wait $WAITPID
+    done
+}
+
+main &
+exit 0
