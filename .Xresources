@@ -17,7 +17,7 @@ URxvt.depth:                32
 URxvt.buffered:             true
 !URxvt.background is set below, and is using a transparency value
 !These do not require compositing, (Native Transparency)
-URxvt.transparent:          true
+URxvt.transparent:          false
 URxvt.shading:              10
 URxvt.blurRadius:           5
 URxvt.cursorBlink:          true
