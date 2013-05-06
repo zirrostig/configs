@@ -3,7 +3,7 @@ Config  { font          = "xft:dejavu serif-9"
         , fgColor       = "white"
         , position      = Top
         , lowerOnStart  = True
-        , persistent    = False
+        , persistent    = True
         , commands      = [ Run Memory [ "-t", "<used>M"
                                        , "-H", "4000"
                                        , "--normal", "green"
@@ -22,7 +22,7 @@ Config  { font          = "xft:dejavu serif-9"
                                                   , "-O", "⏦"
                                                   , "-o", ""
                                                   ] 300
-                          , Run Date "%m%d%H%M" "date" 10
+                          , Run Date "%d%m%H%M" "date" 10
                           , Run Date "%s" "epoch" 10
                           , Run StdinReader
                           ]
