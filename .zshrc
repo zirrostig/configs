@@ -86,7 +86,7 @@ alias allcolors='(x=`tput op` y=`printf %80s`;for i in {0..255};do o=00$i;echo -
 alias killFlash='~/.killFlash.sh'
 alias connectToSimon='ssh -Nfq -L 2676:simon.mines.edu:22 zstigall@imagine.mines.edu'
 alias makeJavaWindowsWork='wmname LG3D'
-alias vim=gvim
+# alias vim=gvim
 
 ################################################################################
 ### Dir Vars (For use with CD_ABLE_VARS
@@ -202,7 +202,7 @@ function tecsvm {
 setopt PROMPT_SUBST             #Allows variable expansion in the prompt string
 setopt PROMPT_BANG              #Replace ! (bang) with history event number
 setopt PROMPT_PERCENT           #% treated special
-setopt TRANSIENT_RPROMPT        #Used when accepting commands from copy/paste 
+setopt TRANSIENT_RPROMPT        #Used when accepting commands from copy/paste
                                 # or otherwise
 
 #Load some stuff up
@@ -289,26 +289,25 @@ function setprompt() {
     pet=@
     dungeon_width=4
 
+    #Username
+    infoline+="${blue}%n${reset} "
+
     #Host
-    infoline+="${cyan}%m${reset} "
+    if [[ -n "$SSH_CLIENT" ]]; then
+        infoline+="${cyan}%m${reset} "
+    fi
 
     #Current Directory
-    if [[ -w $PWD ]] ;
-        then infoline+=${green}
-        else infoline+=${yellow}
+    if [[ -w $PWD ]]; then
+        infoline+=${green}
+    else
+        infoline+=${yellow}
     fi
     infoline+="%4/${reset}"     #Current Directory (out to 4 directories)- $4/
 
     #This is awesome
+    #Makes dungeon
     zstyle -T ":pr-nethack:" show-pet && i_pad=$(( $dungeon_width+1 )) || i_pad=0
-
-#    # Strip color to find text width & make the full-width filler
-#    i_width=${(S)infoline//\%\{*?\%\}} # search-and-replace color escapes
-#    i_width=${#${(%)i_width}} # expand all escapes and count the chars
-
-#    #This fills the width of the terminal with a filler character
-#    filler="${cyan}${(l:$(( $COLUMNS - $i_width - $i_pad ))::.:)}${reset}"
-#    infoline[3]=( "${infoline[3]} ${filler} " )
 
      ### Now, assemble all prompt lines
     lines+=( ${(j::)infoline} )
@@ -328,6 +327,7 @@ function setprompt() {
         done
     fi
 
+    #Joins prompt lines together with \n (F)
     PROMPT=${(F)lines}
 }
 
@@ -351,18 +351,7 @@ venv_rprompt() {
     RPROMPT=$line
 }
 
-##Prompt generation
-#local -a dirString
-##Directory name color, green for writable, yellow for not
-#[[ -w $PWD ]] && dirString += ( ${green} ) || dirString += ( ${yellow} )
-#dirString += ( "%4/ " )
-#dirString += ( "${reset}" )
-#builtin print -p dirString
-
-#The Prompts
-#PS1="%F{red}%M%f %F{green}%4/%f %(?.%?%B%#%b.%F{red}%?%B%b%f%#) "
-##Displays: *** History# Hostname CurDir(4 max) ReturnStatus PromptThing(%or#)
-#RPROMPT="%F{yellow}%*%f"                 #Displays: *** HH:mm:ss (%*)
+#(R)Prompt is set in precmd()
 PS2="%_ > "
 PS4="%_ %i>> "
 
