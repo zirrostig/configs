@@ -16,17 +16,16 @@ Config  { font          = "xft:dejavu serif-9"
                                          , "--normal", "green"
                                          , "--low", "lightblue"
                                          ] 10
-                          , Run Volume "default" "Master" ["-t", "<volume>%"] 10
                           , Run BatteryP ["BAT0"] [ "-t", "<acstatus><left>%"
                                                   , "--"
                                                   , "-O", "⏦"
                                                   , "-o", ""
                                                   ] 300
-                          , Run Date "%d%m%H%M" "date" 10
+                          , Run Date "%m%d%H%M" "date" 10
                           , Run Date "%s" "epoch" 10
                           , Run StdinReader
                           ]
         , sepChar       = "%"
         , alignSep      = "}{"
-        , template      = "<fc=yellow>%date%</fc> <fc=red>::</fc>%StdinReader%}{ %multicpu% <fc=red>»</fc> %memory% <fc=red>|</fc> %battery% <fc=red>»</fc> %default:Master% <fc=red>»</fc> <fc=yellow>%epoch%</fc>"
+        , template      = "<fc=yellow>%date%</fc> <fc=red>::</fc>%StdinReader%}{ %multicpu% <fc=red>»</fc> %memory% <fc=red>|</fc> %battery% <fc=red>»</fc> <fc=yellow>%epoch%</fc>"
         }

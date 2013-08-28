@@ -309,7 +309,10 @@ function setprompt() {
     #Makes dungeon
     zstyle -T ":pr-nethack:" show-pet && i_pad=$(( $dungeon_width+1 )) || i_pad=0
 
-     ### Now, assemble all prompt lines
+    ### Test Colors
+    #lines+="${white}white${reset} ${gray}gray${reset} ${green}green${reset} ${blue}blue${reset} ${cyan}cyan${reset} ${red}red${reset} ${yellow}yellow${reset}"
+
+    ### Now, assemble all prompt lines
     lines+=( ${(j::)infoline} )
     [[ -n ${vcs_info_msg_0_} ]] && lines+="${yellow}${vcs_info_msg_0_}${reset}"
     lines+="%(1j.${blue}%j${reset} .)%(0?.${white}.${red})%? %#${reset} "

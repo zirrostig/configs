@@ -6,37 +6,50 @@
 !Disable bold font
 *boldFont:             -zevv-peep-*-*-*-*-14-*-*-*-*-*-*-*
 
-!Colorscheme based on jellebeans colorscheme for vim
-!Regular colors are true to original, brights are mostly saturation increases
-!!BLK Cursor
-*color0      : #000000
-*color8      : #000000
-!!!RED Tag
-*color1      : #cf6a4c
-*color9      : #dc3a13
-!!GRN SpecialKey
-*color2      : #99ad6a
-*color10     : #9dca32
-!!YEL Keyword
-*color3      : #dad085
-*color11     : #f5d90b
-!!BLU Number
-*color4      : #668799
-*color12     : #006399
-!!MAG Precondit
-*color5      : #f0a0c0
-*color13     : #f03b84
-!!CYN Float
-*color6      : #8bcbe8
-*color14     : #00afff
-!!WHT Search
-*color7      : #e8e8d3
-*color15     : #ffffff
-!!TXT Normal, Normal, Cursor
-*background  : #151515
-*foreground  : #e8e8d3
-*cursorColor : #b0d0f0
-
+! Hybrid Terminal Colours
+! https://gist.github.com/w0ng/3278077
+! vim: ft=xdefaults
+ 
+! Tomorrow-Night Palette
+#define t_background #1D1F21
+#define t_current_line #282A2E
+#define t_selection #373B41
+#define t_foreground #C5C8C6
+#define t_comment #707880
+#define t_red #CC6666
+#define t_orange #DE935F
+#define t_yellow #F0C674
+#define t_green #B5BD68
+#define t_aqua #8ABEB7
+#define t_blue #81A2BE
+#define t_purple #B294BB
+ 
+*background: t_background
+*foreground: t_foreground
+! black
+*color0: t_current_line
+*color8: t_selection
+! red
+*color1: #A54242
+*color9: t_red
+! green
+*color2: #8C9440
+*color10: t_green
+! yellow
+*color3: t_orange
+*color11: t_yellow
+! blue
+*color4: #5F819D
+*color12: t_blue
+! magenta
+*color5: #85678F
+*color13: t_purple
+! cyan
+*color6: #5E8D87
+*color14: t_aqua
+! white
+*color7: t_comment
+*color15: t_foreground
 
 !------------------------------------------------------------------------------
 ! URxvt
@@ -77,13 +90,6 @@ URxvt.keysym.M-Escape:      perl:keyboard-select:activate
 URxvt.keysym.C-minus:       command:\033]710;-zevv-peep-*-*-*-*-14-*-*-*-*-*-*-*\007
 URxvt.keysym.C-equal:       command:\033]710;-zevv-peep-*-*-*-*-16-*-*-*-*-*-*-*\007
 URxvt.keysym.C-plus:        command:\033]710;-zevv-peep-*-*-*-*-20-*-*-*-*-*-*-*\007
-
-URxvt.background  : [90]#151515
-!!HLT Include, StatusLine, ErrorMsg
-!URxvt.colorBD     : #dddddd
-!Underline color, for our url highlighter
-URxvt.colorUL     : #00afff
-!URxvt.colorIT     : #80d4aa
 
 !-----------------------------------------------------------------------------
 ! Xft
