@@ -1,8 +1,0 @@
-map a <Nop>
-
-set guioptions=brs
-
-hi -a StatusLin font-size:10pt
-hi -a TabText font-size:10pt
-hi -a TabIconNumber font-size:8pt margin: 0 2px 0 -14px
-hi -a TabIcon font-size:10pt
