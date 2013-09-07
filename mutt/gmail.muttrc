@@ -1,0 +1,5 @@
+set from=zhstig@gmail.com
+set postponed="+[Gmail]/Drafts
+
+source "gpg2 -dq $HOME/sec/mail_gmail.gpg |"
+

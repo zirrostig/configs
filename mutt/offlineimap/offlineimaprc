@@ -1,0 +1,80 @@
+[general]
+accounts = gmail,lanfort,school
+maxsyncaccounts = 3
+ui = ttyui
+pythonfile = ~/cfg/mutt/offlineimap/offlineimap_additions.py
+
+[Account gmail]
+localrepository = gmail-local
+remoterepository = gmail-remote
+status_backend = sqlite
+autorefresh = 3
+quick = 10
+postsynchook = notmuch new
+
+[Repository gmail-local]
+type = Maildir
+localfolders = ~/m/gmail/
+nametrans = nt_local
+
+[Repository gmail-remote]
+type = Gmail
+remoteuser = zhstig@gmail.com
+remotepasseval = mailpasswd('gmail')
+realdelete = no
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+ssl = yes
+nametrans = nt_remote
+
+[Account school]
+localrepository = school-local
+remoterepository = school-remote
+status_backend = sqlite
+autorefresh = 3
+quick = 10
+postsynchook = notmuch new
+
+[Repository school-local]
+type = Maildir
+localfolders = ~/m/school/
+nametrans = nt_local
+
+[Repository school-remote]
+type = Gmail
+remoteuser = zstigall@mymail.mines.edu
+remotepasseval = mailpasswd('school')
+realdelete = no
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+ssl = yes
+nametrans = nt_remote
+
+[Account lanfort]
+localrepository = lanfort-local
+remoterepository = lanfort-remote
+status_backend = sqlite
+autorefresh = 3
+quick = 10
+postsynchook = notmuch new
+
+[Repository lanfort-local]
+type = Maildir
+localfolders = ~/m/lanfort/
+nametrans = nt_local
+
+[Repository lanfort-remote]
+type = Gmail
+remoteuser = zirrostig@lanfort.org
+remotepasseval = mailpasswd('lanfort')
+realdelete = no
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+ssl = yes
+nametrans = nt_remote
+
+[mbnames]
+enabled = yes
+filename = ~/.mutt/mailboxes
+header = "mailboxes"
+peritem = +%(accountname)s/%(foldername)s"
+sep = " "
+footer = "\n"
+

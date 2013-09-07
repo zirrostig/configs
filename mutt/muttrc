@@ -1,0 +1,36 @@
+set mbox_type=Maildir
+set folder=$HOME/m
+
+set spoolfile=+"gmail/INBOX"
+
+set move=no
+
+set header_cache=$HOME/m/.hcache
+
+set realname="Zachary Stigall"
+
+set edit_headers
+set editor="vim +/^$ ++1"
+
+set sort=threads
+set sort_aux=reverse-last-date-received
+
+mailboxes +"gmail/INBOX" +"gmail/[Gmail].All Mail" +"gmail/[Gmail].Sent Mail" +"school/INBOX" +"school/[Gmail].All Mail" +"school/[Gmail].Sent Mail" +"lanfort/INBOX" +"lanfort/[Gmail].All Mail" +"lanfort/[Gmail].Sent Mail"
+
+set reverse_name=yes
+set from=zhstig@gmail.com
+alternates zstigall@mymail.mines.edu|zstigall@mines.edu|zirrostig@lanfort.org
+
+
+folder-hook gmail source $HOME/.mutt/gmail.muttrc
+folder-hook school source $HOME/.mutt/school.muttrc
+folder-hook lanfort source $HOME/.mutt/lanfort.muttrc
+
+source /usr/share/doc/mutt/colors/solarized/mutt-colors-solarized-dark-256.muttrc
+
+#GPG
+source $HOME/.mutt/gpg.muttrc
+set pgp_timeout=3600
+set crypt_autosign=yes
+set crypt_replyencrypt=yes
+set pgp_sign_as=5E5EBF18

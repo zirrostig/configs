@@ -59,6 +59,14 @@ autoload -U edit-command-line
 zle -N edit-command-line
 bindkey '\C-x\C-e' edit-command-line
 
+#Setup cdr
+autoload -U add-zsh-hook
+autoload -U cdr
+autoload -U chpwd_recent_dirs
+add-zsh-hook chpwd chpwd_recent_dirs
+zstyle ':completion:*:*:cdr:*:*' menu selection
+zstyle ':chpwd:*' recent-dirs-prune parent
+
 ################################################################################
 ### Zsh Modules
 ################################################################################
@@ -89,15 +97,6 @@ alias makeJavaWindowsWork='wmname LG3D'
 # alias vim=gvim
 
 ################################################################################
-### Dir Vars (For use with CD_ABLE_VARS
-################################################################################
-if [[ "$HOST" == "thwomp" ]]; then
-    dl=$HOME/dl
-    csm=$HOME/csm
-    sc=$HOME/sc
-fi
-
-################################################################################
 ### Functions
 ################################################################################
 #Executed before the prompt is displayed
@@ -124,11 +123,6 @@ function preexec {
 
 #Executed whenever I change directories
 function chpwd {
-    if [[ -d $HOME/atm ]]; then
-        echo "#!$( which sh )\nurxvtc -cd $PWD" > $HOME/atm/lastDir
-        chmod +x $HOME/atm/lastDir
-    fi
-
     #Change urxvt's title to be the current directory to 2 dirs
     if [[ "$TERM" == "rxvt-unicode-256color" ]]; then
         local dir=${(%):-%2/}
@@ -136,12 +130,13 @@ function chpwd {
     fi
 }
 
-function cd {
-if (( $# == 0 )) && [[ `pwd` != $HOME ]]
-    then builtin pushd -q ~/
-    else builtin cd $*
-    fi
-}
+# cdr has replaced this
+# function cd {
+# if (( $# == 0 )) && [[ `pwd` != $HOME ]]
+#     then builtin pushd -q ~/
+#     else builtin cd $*
+#     fi
+# }
 
 function rationalise-dot {
     if [[ $LBUFFER = *..  ]]; then
@@ -222,15 +217,15 @@ red="%{$fg[red]%}"
 yellow="%{$fg[yellow]%}"
 
 # Set up VCS_INFO
-zstyle ':vcs_info:*' enable git
-zstyle ':vcs_info:git:*' get-revision true
-zstyle ':vcs_info:git:*' check-for-changes true
+zstyle ':vcs_info:*' enable git hg bzr darcs
+zstyle ':vcs_info:*:*' check-for-changes true
+zstyle ':vcs_info:*:*' get-revision true
 
-zstyle ':vcs_info:git*' formats "(%s) %12.12i %c%u %b%m" # hash changes branch misc
-zstyle ':vcs_info:git*' actionformats "(%s|${white}%a${red}) %12.12i %c%u %b%m"
+zstyle ':vcs_info:*' formats "(%s) %12.12i %c%u %b%m" # hash changes branch misc
+zstyle ':vcs_info:*' actionformats "(%s|${white}%a${red}) %12.12i %c%u %b%m"
 
-zstyle ':vcs_info:git*:*' stagedstr "${green}S${blue}"
-zstyle ':vcs_info:git*:*' unstagedstr "${red}U${yellow}"
+zstyle ':vcs_info:*:*' stagedstr "${green}S${blue}"
+zstyle ':vcs_info:*:*' unstagedstr "${red}U${yellow}"
 
 zstyle ':vcs_info:git*+set-message:*' hooks git-st git-stash git-untracked
 

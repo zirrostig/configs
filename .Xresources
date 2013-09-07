@@ -1,15 +1,20 @@
 !------------------------------------------------------------------------------
 ! ColorScheme and font for xterm and urxvt
 
+!Actually used
+URxvt.font:     xft:Inconsolata-7
+URxvt.boldFont: xft:Inconsolata-7:bold
 
-*font:                 -zevv-peep-*-*-*-*-14-*-*-*-*-*-*-*
-!Disable bold font
-*boldFont:             -zevv-peep-*-*-*-*-14-*-*-*-*-*-*-*
+!XTerm.font:     -zevv-peep-*-*-*-*-16-*-*-*-*-*-*-*
+! !Disable bold font
+!XTerm.boldFont: -zevv-peep-*-*-*-*-16-*-*-*-*-*-*-*
+
+
 
 ! Hybrid Terminal Colours
 ! https://gist.github.com/w0ng/3278077
 ! vim: ft=xdefaults
- 
+
 ! Tomorrow-Night Palette
 #define t_background #1D1F21
 #define t_current_line #282A2E
@@ -23,7 +28,7 @@
 #define t_aqua #8ABEB7
 #define t_blue #81A2BE
 #define t_purple #B294BB
- 
+
 *background: t_background
 *foreground: t_foreground
 ! black
@@ -75,7 +80,7 @@ URxvt.pointerBlank:         true
 
 !Perl Extension Stuff
 URxvt.perl-lib:             $HOME/.urxvt/ext
-URxvt.perl-ext-common:      default,matcher,url-select,keyboard-select
+URxvt.perl-ext-common:      default,matcher,url-select,keyboard-select,font-size
 URxvt.urlLauncher:          /usr/bin/firefox
 URxvt.matcher.button:       1
 URxvt.underlineURLs:        true
@@ -87,14 +92,23 @@ URxvt.keysym.M-u:           perl:url-select:select_next
 URxvt.keysym.M-Escape:      perl:keyboard-select:activate
 
 !Make Ctrl-<-+=> change between three font sizes
-URxvt.keysym.C-minus:       command:\033]710;-zevv-peep-*-*-*-*-14-*-*-*-*-*-*-*\007
-URxvt.keysym.C-equal:       command:\033]710;-zevv-peep-*-*-*-*-16-*-*-*-*-*-*-*\007
-URxvt.keysym.C-plus:        command:\033]710;-zevv-peep-*-*-*-*-20-*-*-*-*-*-*-*\007
+!URxvt.keysym.C-minus:       command:\033]710;-zevv-peep-*-*-*-*-14-*-*-*-*-*-*-*\007
+!URxvt.keysym.C-equal:       command:\033]710;-zevv-peep-*-*-*-*-16-*-*-*-*-*-*-*\007
+!URxvt.keysym.C-plus:        command:\033]710;-zevv-peep-*-*-*-*-20-*-*-*-*-*-*-*\007
+URxvt.keysym.C-equal:        perl:font-size:increase
+URxvt.keysym.C-minus:        perl:font-size:decrease
+
 
 !-----------------------------------------------------------------------------
 ! Xft
 
-Xft.antialias:      true
+Xft.autohint:   0
+Xft.lcdfilter:  lcddefault
+Xft.hintstyle:  hintfull
+Xft.hinting:    1
+Xft.antialias:  1
+Xft.rgba:       rgb
+Xft.dpi:        165
 
 !-----------------------------------------------------------------------------
 ! xpdf

@@ -1,0 +1,2 @@
+#!/usr/bin/sh
+urxvt -cd $(head -n1 $HOME/.chpwd-recent-dirs | tr '$' ' ' | tr "'" ' ')

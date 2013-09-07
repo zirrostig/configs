@@ -18,7 +18,7 @@ Config  { font          = "xft:dejavu serif-9"
                                          ] 10
                           , Run BatteryP ["BAT0"] [ "-t", "<acstatus><left>%"
                                                   , "--"
-                                                  , "-O", "⏦"
+                                                  , "-O", ""
                                                   , "-o", ""
                                                   ] 300
                           , Run Date "%m%d%H%M" "date" 10
