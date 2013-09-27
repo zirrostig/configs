@@ -65,15 +65,15 @@ URxvt.boldFont: xft:Inconsolata-7:bold
 
 URxvt.letterSpace:          0
 URxvt.scrollstyle:          plain
-URxvt.saveLines:            20000
+URxvt.saveLines:            60000
 !borderLess needs to be off for xmonad to not go nuts
 URxvt.borderLess:           false
 URxvt.depth:                32
 URxvt.buffered:             true
 !URxvt.background is set below, and is using a transparency value
 !These do not require compositing, (Native Transparency)
-URxvt.transparent:          false
-URxvt.shading:              10
+URxvt.transparent:          true
+URxvt.shading:              30
 URxvt.blurRadius:           5
 URxvt.cursorBlink:          true
 URxvt.pointerBlank:         true

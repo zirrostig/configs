@@ -185,8 +185,17 @@ function tecsc {
     /home/zirro/csm/f12/csci410/tecs/JackCompiler.sh $PWD/$1
 }
 function tecsvm {
-    /home/zirro/csm/f12/csci410/tecs/VMEmulator.sh
+    /home/zirro/csm/f12/csci410/tecs/VMEmulator.sh $PWD/$1
 }
+function tecscpu {
+    /home/zirro/csm/f12/csci410/tecs/CPUEmulator.sh $PWD/$1
+}
+
+################################################################################
+### Less Pipe
+################################################################################
+export LESSOPEN="| /usr/bin/src-hilite-lesspipe.sh %s"
+export LESS=" -R "
 
 ################################################################################
 ### My Prompt

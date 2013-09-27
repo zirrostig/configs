@@ -30,7 +30,3 @@ source /usr/share/doc/mutt/colors/solarized/mutt-colors-solarized-dark-256.muttr
 
 #GPG
 source $HOME/.mutt/gpg.muttrc
-set pgp_timeout=3600
-set crypt_autosign=yes
-set crypt_replyencrypt=yes
-set pgp_sign_as=5E5EBF18

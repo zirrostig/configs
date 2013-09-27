@@ -1,35 +1,3 @@
-# -*-muttrc-*-
-#
-# Command formats for gpg.
-# 
-# This version uses gpg-2comp from 
-#   http://70t.de/download/gpg-2comp.tar.gz
-#
-# $Id$
-#
-# %p    The empty string when no passphrase is needed,
-#       the string "PGPPASSFD=0" if one is needed.
-#
-#       This is mostly used in conditional % sequences.
-#
-# %f    Most PGP commands operate on a single file or a file
-#       containing a message.  %f expands to this file's name.
-#
-# %s    When verifying signatures, there is another temporary file
-#       containing the detached signature.  %s expands to this
-#       file's name.
-#
-# %a    In "signing" contexts, this expands to the value of the
-#       configuration variable $pgp_sign_as.  You probably need to
-#       use this within a conditional % sequence.
-#
-# %r    In many contexts, mutt passes key IDs to pgp.  %r expands to
-#       a list of key IDs.
-
-# Note that we explicitly set the comment armor header since GnuPG, when used
-# in some localiaztion environments, generates 8bit data in that header, thereby
-# breaking PGP/MIME.
-
 # decode application/pgp
 set pgp_decode_command="gpg --status-fd=2 %?p?--passphrase-fd 0? --no-verbose --quiet --batch --output - %f"
 
@@ -70,16 +38,14 @@ set pgp_list_pubring_command="gpg --no-verbose --batch --quiet --with-colons --l
 # read in the secret key ring
 set pgp_list_secring_command="gpg --no-verbose --batch --quiet --with-colons --list-secret-keys %r" 
 
-# fetch keys
-# set pgp_getkeys_command="pkspxycwrap %r"
-
-# pattern for good signature - may need to be adapted to locale!
-
-# set pgp_good_sign="^gpgv?: Good signature from "
-
-# OK, here's a version which uses gnupg's message catalog:
-# set pgp_good_sign="`gettext -d gnupg -s 'Good signature from "' | tr -d '"'`"
-
 # This version uses --status-fd messages
 set pgp_good_sign="^\\[GNUPG:\\] GOODSIG"
 
+set pgp_use_gpg_agent=yes
+set pgp_timeout=3600
+set crypt_autosign=yes
+set crypt_replyencrypt=yes
+set pgp_sign_as=FF68FBAA
+
+#Verify on open
+set crypt_verify_sig=yes

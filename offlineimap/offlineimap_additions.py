@@ -57,7 +57,8 @@ def exclude(excludes):
 # that you store your passwords in
 
 def mailpasswd(server):
-    pws = subprocess.check_output(["gpg", "-q", "--no-tty", "-d", "--use-agent", "/home/zirro/sec/mail.gpg"])
+    # pws = subprocess.check_output(["gpg", "-q", "--no-tty", "-d", "--use-agent", "/home/zirro/sec/mail.gpg"])
+    pws = subprocess.check_output(["gpg2", "-q", "-d", "/home/zirro/sec/mail.gpg"])
     pws_as_str = pws.decode('utf-8')
     # Example line
     # server = pa****rd

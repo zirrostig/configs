@@ -51,7 +51,7 @@ hostname = nodeName <$> getSystemID
 ---------------------------------------
 myModKey h
   | h == "darknut" = mod1Mask -- Alt/Meta
-  | h == "thwomp"  = mod4Mask -- Windows/Command/Super
+  | h == "bari"    = mod1Mask -- Windows/Command/Super
   | otherwise      = mod1Mask
 myTerminal      = "urxvtc"
 myWebBrowser    = "firefox"
@@ -62,7 +62,7 @@ myXmobar h = "xmobar -f \"" ++ statusFont h ++ "\""
 ----------------------
 statusFont h
   | h == "darknut" = "xft:dejavu serif-9"
-  | h == "thwomp"  = "xft:dejavu serif-7"
+  | h == "bari"    = "xft:dejavu serif-5"
   | otherwise      = "xft:dejavu serif-9"
 
 ---------------------
@@ -71,7 +71,7 @@ statusFont h
 myKeys host home conf = M.fromList $ [
           --Mostly Defaults
             ((modKey   .|. shiftMask, xK_Return                ), spawn $ XMonad.terminal conf                   )  -- launch a terminal
-          , ((modKey   .|. controlMask, xK_Return              ), safeSpawn (combine home "atm/lastDir") []      )
+          , ((modKey   .|. controlMask, xK_Return              ), safeSpawn "$HOME/cfg/bin/urxvtc-last" []       )
           , ((modKey   .|. shiftMask, xK_c                     ), kill                                           )  -- Close focused window
           , ((modKey                , xK_space                 ), sendMessage NextLayout                         )  -- Rotate through the available layout algorithms
           , ((modKey   .|. shiftMask, xK_space                 ), setLayout $ XMonad.layoutHook conf             )  -- Reset the layouts on the current workspace to default
