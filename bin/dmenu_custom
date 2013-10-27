@@ -1,0 +1,20 @@
+#!/bin/bash
+cachedir=${XDG_CACHE_HOME:-"$HOME/.cache"}
+if [ -d "$cachedir" ]; then
+	cache=$cachedir/dmenu_run
+else
+	cache=$HOME/.dmenu_cache # if no xdg dir, fall back to dotfile in ~
+fi
+(
+	IFS=:
+	if stest -dqr -n "$cache" $PATH; then
+		stest -flx $PATH | sort -u | tee "$cache" | dmenu "$@"
+	else
+		dmenu "$@" < "$cache"
+	fi
+) | awk -f <(sed -e '0,/^#!.*awk/d' $0) | ${SHELL:-"/bin/sh"} &
+exit 0
+
+#!/usr/bin/awk -f
+/^\//   {print(gsub(/^\//, "urxvtc -e ", $0))}
+        {print}

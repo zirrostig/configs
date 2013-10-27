@@ -73,7 +73,7 @@ URxvt.buffered:             true
 !URxvt.background is set below, and is using a transparency value
 !These do not require compositing, (Native Transparency)
 URxvt.transparent:          true
-URxvt.shading:              30
+URxvt.shading:              15
 URxvt.blurRadius:           5
 URxvt.cursorBlink:          true
 URxvt.pointerBlank:         true
@@ -102,13 +102,13 @@ URxvt.keysym.C-minus:        perl:font-size:decrease
 !-----------------------------------------------------------------------------
 ! Xft
 
+Xft.dpi:        165
 Xft.autohint:   0
 Xft.lcdfilter:  lcddefault
 Xft.hintstyle:  hintfull
-Xft.hinting:    1
-Xft.antialias:  1
+Xft.hinting:    true
+Xft.antialias:  true
 Xft.rgba:       rgb
-Xft.dpi:        165
 
 !-----------------------------------------------------------------------------
 ! xpdf
