@@ -1,5 +1,0 @@
-set from=zstigall@mymail.mines.edu
-set postponed="+[Gmail]/Drafts
-
-source "gpg2 -dq $HOME/sec/mail_school.gpg |"
-

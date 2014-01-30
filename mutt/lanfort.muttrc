@@ -1,5 +1,0 @@
-set from=zirrostig@lanfort.org
-set postponed="+[Gmail]/Drafts
-
-source "gpg2 -dq $HOME/sec/mail_lanfort.gpg |"
-
