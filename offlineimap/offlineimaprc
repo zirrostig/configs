@@ -8,7 +8,7 @@ pythonfile = ~/cfg/offlineimap/offlineimap_additions.py
 localrepository = gmail-local
 remoterepository = gmail-remote
 status_backend = sqlite
-autorefresh = 3
+autorefresh = 1
 quick = 10
 postsynchook = notmuch new
 
@@ -40,7 +40,7 @@ nametrans = lambda folder: { '[Gmail]/Drafts':    'drafts',
 localrepository = school-local
 remoterepository = school-remote
 status_backend = sqlite
-autorefresh = 3
+autorefresh = 1
 quick = 10
 postsynchook = notmuch new
 
@@ -70,7 +70,7 @@ nametrans = lambda folder: { '[Gmail]/Drafts':    'drafts',
 localrepository = lanfort-local
 remoterepository = lanfort-remote
 status_backend = sqlite
-autorefresh = 3
+autorefresh = 1
 quick = 10
 postsynchook = notmuch new
 
