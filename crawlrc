@@ -8,7 +8,7 @@ morgue_dir = .crawl/morgue/
 save_dir = .crawl/saves/
 
 #Pickup/Drop
-autopickup = $?!\/%=0
+autopickup = $?!\/%+=0
 
 #Branding
 friend_brand = hi:green
@@ -41,6 +41,7 @@ mp_warning = 10
 delay_message_clear = true
 show_inventory_weights = true
 show_gold_turns = true
+msg_min_height = 8
 msg_max_height = 20
 #mlist_allow_alternate_layout = true #Causes Crash
 #mlist_targetting = true
