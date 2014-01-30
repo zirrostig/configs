@@ -1,3 +1,6 @@
 [submodule "sources/xcape"]
 	path = sources/xcape
 	url = git://github.com/pianohacker/xcape.git
+[submodule "sources/zsh-syntax-highlighting"]
+	path = sources/zsh-syntax-highlighting
+	url = git://github.com/zsh-users/zsh-syntax-highlighting.git
