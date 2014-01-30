@@ -16,5 +16,6 @@ fi
 exit 0
 
 #!/usr/bin/awk -f
-/^\//   {print(gsub(/^\//, "urxvtc -e ", $0))}
+/^\//   {sub(/^\//, "urxvtc -e ", $0)}
+/>/     {$0 = $0 ".sh"; sub(/>/, "/home/zirro/.screenlayout/")}
         {print}
