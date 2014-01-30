@@ -90,6 +90,8 @@ bindkey '^[l' push-line
 alias ls='ls --color=auto'
 alias ll='ls -l'
 alias la='ls -la'
+alias p=ls
+alias pl=ll
 alias allcolors='(x=`tput op` y=`printf %80s`;for i in {0..255};do o=00$i;echo -e ${o:${#o}-3:3} `tput setaf $i;tput setab $i`${y// /=}$x;done)'
 alias killFlash='~/.killFlash.sh'
 alias connectToSimon='ssh -Nfq -L 2676:simon.mines.edu:22 zstigall@imagine.mines.edu'
@@ -138,17 +140,11 @@ function chpwd {
 #     fi
 # }
 
-function rationalise-dot {
-    if [[ $LBUFFER = *..  ]]; then
-        LBUFFER+=/..
-    else
-        LBUFFER+=.
-    fi
-}
 
 function reload {
-    source $HOME/.zshrc
+    source $HOME/.zsh/.zshrc
 }
+
 
 function vboxRawDisk {
     if [[ $# == 0 ]] || [[ $1 == '-h' ]] || [[ $1 == '--help' ]]
@@ -157,16 +153,29 @@ function vboxRawDisk {
     fi
 }
 
+################################################################################
+### Widgets and whatnot
+################################################################################
+
+function rationalise-dot {
+    if [[ $LBUFFER = *..  ]]; then
+        LBUFFER+=/..
+    else
+        LBUFFER+=.
+    fi
+}
 zle -N rationalise-dot
+
 bindkey . rationalise-dot
 bindkey -s '`' '~/'
 
 ################################################################################
 ### Various Exports
 ################################################################################
-export EDITOR="vim";
-export BROWSER="firefox";
-export WINEARCH="win64";
+export EDITOR="vim"
+export BROWSER="firefox"
+export WINEARCH="win64"
+export READNULLCMD="less"
 
 ################################################################################
 ### CSCI410 Tecs HW Sim
@@ -366,6 +375,9 @@ PS4="%_ %i>> "
 # Zsh Completion Stuff
 ###############################################################################
 
+#Auto rehashing
+zstyle ":completion:*" rehash yes
+
 #SSH config hosts
 if [ -f ~/.ssh/known_hosts ]; then
     hosts=(`awk '{print $1}' ~/.ssh/known_hosts | tr ',' '\n' `)
@@ -376,3 +388,29 @@ fi
 if [ "$hosts" ]; then
     zstyle ':completion:*:hosts' hosts $hosts
 fi
+
+#Fuzzy Files
+zle -C fuzzy menu-expand-or-complete fuzzy-files
+bindkey '^[t' fuzzy
+function fuzzy-files {
+    if [[ $PREFIX == */* ]]; then
+        fuzzdir=${PREFIX%/*}
+    else
+        fuzzdir=.
+    fi
+    fuzzpat=${PREFIX##*/}
+    compadd -U $(find ${fuzzdir} | matcher "${fuzzpat}")
+}
+
+###############################################################################
+# ZSH SYNTAX HIGHLIGHT
+###############################################################################
+. ~/cfg/sources/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets cursor pattern)
+ZSH_HIGHLIGHT_STYLES[cursor]='bg=red,bold'
+ZSH_HIGHLIGHT_STYLES[alias]='fg=magenta'
+ZSH_HIGHLIGHT_STYLES[builtin]='fg=yellow'
+ZSH_HIGHLIGHT_STYLES[command]='none'
+ZSH_HIGHLIGHT_STYLES[function]='fg=bold'
+ZSH_HIGHLIGHT_STYLES[path]='fg=cyan'
+ZSH_HIGHLIGHT_STYLES[path_prefix]='none'
