@@ -1,25 +1,20 @@
 import XMonad
 
-import XMonad.Actions.CopyWindow (copy)
+import XMonad.Actions.ConstrainedResize as Sqr
 import XMonad.Actions.CycleWS
 import XMonad.Actions.DwmPromote
-import XMonad.Actions.DynamicWorkspaces
-import XMonad.Actions.FlexibleResize
-import XMonad.Actions.GridSelect
-import XMonad.Actions.PerWorkspaceKeys
-import XMonad.Actions.Search
-import XMonad.Actions.Submap
+import XMonad.Actions.UpdatePointer
 
 import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.SetWMName
 import XMonad.Hooks.UrgencyHook
 
 import XMonad.Layout.Combo
-import XMonad.Layout.Grid
 import XMonad.Layout.IM
-import XMonad.Layout.MosaicAlt
+import XMonad.Layout.MultiToggle
+import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.NoBorders
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.Tabbed
@@ -27,48 +22,56 @@ import XMonad.Layout.WindowNavigation
 
 import XMonad.Util.Run
 
-import System.Directory
-import System.FilePath.Posix
 import System.IO
 import System.Posix.Unistd
 import System.Exit (exitSuccess)
 
-import Control.Monad ((<=<), liftM)
 import Control.Applicative ((<$>))
 import Data.Ratio ((%))
 
 import qualified Data.List as L
 import qualified Data.Map as M
+import qualified Data.Monoid as MN
 import qualified XMonad.StackSet as W
 
---------------------
---Helper Functions--
---------------------
-hostname = nodeName <$> getSystemID
-
----------------------------------------
---Default Settings for various things--
----------------------------------------
-myModKey h
-  | h == "darknut" = mod1Mask -- Alt/Meta
-  | h == "bari"    = mod1Mask -- Windows/Command/Super
-  | otherwise      = mod1Mask
-myTerminal      = "urxvtc"
-myWebBrowser    = "firefox"
-myXmobar h = "xmobar -f \"" ++ statusFont h ++ "\""
-
-----------------------
---Colors, Fonts, Etc--
-----------------------
-statusFont h
-  | h == "darknut" = "xft:dejavu serif-9"
-  | h == "bari"    = "xft:dejavu serif-5"
-  | otherwise      = "xft:dejavu serif-9"
-
 ---------------------
---Keyboard Bindings--
+--The actual config--
 ---------------------
-myKeys host home conf = M.fromList $ [
+main :: IO ()
+main = do
+    host            <- hostname
+    xmPipe          <- spawnPipe $ myXmobar host
+    -- dzenStatusBar   <- spawnPipe $ myStatusDzen host
+    -- conkyStatusBar  <- spawnPipe $ myStatusConky host
+    xmonad $ withUrgencyHook NoUrgencyHook $ defaultConfig
+        { modMask         = myModKey host
+        , terminal        = "urxvtc"
+        , workspaces      = myWorkspaces
+        , keys            = myKeys host
+        , mouseBindings   = myMouse host
+        , layoutHook      = myLayoutHook
+        , manageHook      = myManageHook <+> manageDocks
+        , handleEventHook = docksEventHook
+        , logHook         = (dynamicLogWithPP $ xmLogHook xmPipe) >> mousePosUpdate
+        , startupHook     = myStartupHook
+        }
+
+myStartupHook :: X()
+myStartupHook = do
+  setWMName "LG3D"
+  safeSpawnProg "/usr/bin/urxvtd"
+
+myMouse :: Host -> XConfig Layout -> M.Map (KeyMask, Button) (Window -> X ())
+myMouse host _conf = M.fromList
+    [ ((modKey              , button1), \w -> focus w >> mouseMoveWindow w >> windows W.shiftMaster)
+    , ((modKey              , button2), windows . (W.shiftMaster .) . W.focusWindow)
+    , ((modKey              , button3), (\w -> focus w >> Sqr.mouseResizeWindow w False))
+    , ((modKey .|. shiftMask, button3), (\w -> focus w >> Sqr.mouseResizeWindow w True ))
+    ] where
+      modKey = myModKey host
+
+myKeys :: Host -> XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
+myKeys host conf = M.fromList $ [
           --Mostly Defaults
             ((modKey   .|. shiftMask, xK_Return                ), spawn $ XMonad.terminal conf                   )  -- launch a terminal
           , ((modKey   .|. controlMask, xK_Return              ), safeSpawn "$HOME/cfg/bin/urxvtc-last" []       )
@@ -77,8 +80,16 @@ myKeys host home conf = M.fromList $ [
           , ((modKey   .|. shiftMask, xK_space                 ), setLayout $ XMonad.layoutHook conf             )  -- Reset the layouts on the current workspace to default
           , ((modKey                , xK_r                     ), rescreen                                       )  -- Redraws the windows
           , ((modKey                , xK_p                     ), spawn "dmenu_run"                              )  -- Toggle dmenu, application launcher
+          , ((modKey                , xK_y                     ), spawn "dmenu_custom"                           )  -- Customized dmenu with special commands
           --Hiding of stuff
           , ((modKey                , xK_b                     ), sendMessage ToggleStruts                       )  -- Hide Status Bars
+          --Media-Keys
+          -- Should really set these at a system level
+          , ((0                     , 0x1008FF11               ), spawn "pamixer --decrease 5"                   )  -- Volume Down
+          , ((0                     , 0x1008FF13               ), spawn "pamixer --increase 5"                   )  -- Volume Up
+          , ((0                     , 0x1008FF12               ), spawn "pamixer --toggle-mute"                  )  -- Mute Volume
+          , ((0                     , 0x1008FF02               ), spawn "xbacklight +10%"                        )  -- Brightness Up
+          , ((0                     , 0x1008FF03               ), spawn "xbacklight -10%"                        )  -- Brightness Down
           --Window/Workspace Management
           , ((modKey   .|. controlMask, xK_Left                ), prevWS                                         )  -- Move focused window to workspace to the left
           , ((modKey   .|. controlMask, xK_Right               ), nextWS                                         )  -- Move focused window to workspace to the right
@@ -90,23 +101,21 @@ myKeys host home conf = M.fromList $ [
           , ((modKey                , xK_j                     ), windows W.focusDown                            )  -- Move focus to the next window
           , ((modKey                , xK_k                     ), windows W.focusUp                              )  -- Move focus to the previous window
           , ((modKey                , xK_h                     ), sendMessage Shrink                             )  -- Shrink the master area
-          , ((modKey   .|. shiftMask, xK_h                     ), withFocused (sendMessage . expandWindowAlt)    )  -- (Mosaic Layout) Increases focused window's size
           , ((modKey                , xK_l                     ), sendMessage Expand                             )  -- Expand the master area
-          , ((modKey   .|. shiftMask, xK_l                     ), withFocused (sendMessage . shrinkWindowAlt)    )  -- (Mosaic Layout) Decreases focused window's size
           , ((modKey                , xK_m                     ), windows W.focusMaster                          )  -- Move focus to the master window
           , ((modKey                , xK_t                     ), withFocused $ windows . W.sink                 )  -- Push window back into tiling
           , ((modKey                , xK_comma                 ), sendMessage (IncMasterN 1)                     )  -- Increment the number of windows in the master area
           , ((modKey                , xK_period                ), sendMessage (IncMasterN (-1))                  )  -- Deincrement the number of windows in the master area
-          , ((modKey                , xK_Right                 ), sendMessage $ Move R                           )  -- Moves current window right
-          , ((modKey                , xK_Left                  ), sendMessage $ Move L                           )  -- Moves current window left
+          , ((modKey                , xK_Right                 ), sendMessage $ Move R                           )  -- Moves current window right-
+          , ((modKey                , xK_Left                  ), sendMessage $ Move L                           )  -- Moves current window left -
           , ((modKey                , xK_Up                    ), sendMessage $ Move U                           )  -- Moves current window up
           , ((modKey                , xK_Down                  ), sendMessage $ Move D                           )  -- Moves current window down
           , ((modKey   .|. shiftMask, xK_Right                 ), sendMessage $ Swap R                           )  -- Make these use the same keys as the above 4 when not in dual tabbed mode
           , ((modKey   .|. shiftMask, xK_Left                  ), sendMessage $ Swap L                           )
           , ((modKey   .|. shiftMask, xK_Up                    ), sendMessage $ Swap U                           )
           , ((modKey   .|. shiftMask, xK_Down                  ), sendMessage $ Swap D                           )
-          --Layout Management
-          , ((modKey   .|. controlMask, xK_space               ), sendMessage resetAlt                           )  -- Resets layouts to default settings
+          , ((modKey                , xK_x                     ), sendMessage $ Toggle MIRROR                    )  -- Mirrors Layout
+          , ((modKey                , xK_f                     ), sendMessage $ Toggle NBFULL                    )  -- Temp. Full Screen current window
           --Lock Computer
           , ((modKey   .|. shiftMask, xK_z                     ), spawn "slimlock"                               )  -- Locks screen with slimlock
           --Restarting/Closing XMonad
@@ -126,14 +135,10 @@ myKeys host home conf = M.fromList $ [
               , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
           ] where modKey = myModKey host
 
-------------------------------------------------
---Default Application Startup, Dock is in main--
-------------------------------------------------
-startupApps = safeSpawnProg "urxvtd" --Daemon running my terminals, reduces resource usage and improves preformance
-
 --------------
 --Workspaces--
 --------------
+myWorkspaces :: [String]
 myWorkspaces = [ "dashboard"
                , "terminal"
                , "web"
@@ -142,15 +147,18 @@ myWorkspaces = [ "dashboard"
                , "temporary"
                ]
 
+myWSstatic :: [String]
 myWSstatic =   [ "terminal"
                , "web"
                , "messaging"
                , "media"
                ]
 
+myWSnever :: [String]
 myWSnever =    [ "dashboard"
                ]
 
+myWSabbrev :: String -> String
 myWSabbrev ws = case ws of
   "dashboard" -> "dash"
   "terminal"  -> "term"
@@ -159,15 +167,48 @@ myWSabbrev ws = case ws of
   "temporary" -> "temp"
   _           -> ws
 
+-----------------------------------------
+--Layouts & Workspaces working together--
+-----------------------------------------
+myLayoutHook    = avoidStruts
+                $ smartBorders
+                $ mkToggle (single NBFULL)
+                $ mkToggle (single MIRROR)
+                $ windowNavigation myLayoutsPerWS
+
+myLayoutsPerWS = onWorkspace "dashboard" fullLayout
+               $ onWorkspace "terminal"  layoutTerm
+               $ onWorkspace "web"       layoutWeb
+               $ onWorkspace "messaging" layoutMsg
+               $ layoutDefault -- All other workspaces
+
+-------------------
+---Layout Control--
+-------------------
+--Type Sigs are crazy long
+layoutTerm      = tiledLayout ||| comboTabed ||| tabbedLayout
+layoutWeb       = tiledLayout
+layoutMsg       = msgLayout ||| tabbedLayout
+layoutDefault   = tabbedLayout ||| fullLayout
+
+----------------------
+--Customized Layouts--
+----------------------
+--The Type Sigs are very complicated and long so they are absent
+fullLayout      = noBorders Full
+tiledLayout     = Tall 1 (1/50) (1/2)
+tabbedLayout    = tabbed shrinkText defaultTheme
+comboTabed      = combineTwo tiledLayout tabbedLayout tabbedLayout
+msgLayout       = gridIM (1%7) (ClassName "Pidgin")  --Make Buddy List stay on right
 
 ---------------
 --Manage Hook--
 ---------------
-
 --Returns Query True if q is a prefix of x
 (^?) :: (Eq a) => XMonad.Query [a] -> [a] -> XMonad.Query Bool
 q ^? x = (L.isPrefixOf x) <$> q
 
+myManageHook :: XMonad.Query (MN.Endo WindowSet)
 myManageHook    = composeAll
     [ className =? "Firefox"            --> doShift "web"
     , className =? "Chromium"           --> doShift "web"
@@ -177,42 +218,16 @@ myManageHook    = composeAll
     , className =? "MPlayer"            --> doFloat             --MPlayer windows don't get docked
     , className =? "Spotify"            --> doShift "media"
     , className =? "Wine"               --> doFloat
-    , className =? "Steam"              --> doFloat >> doIgnore
+    , className =? "Steam"              --> doFloat
     , className =? "steam"              --> doFullFloat         --bigpicture-mode
     , className =? "LOT"                --> doShift "dashboard" >> doIgnore
     , isFullscreen                      --> doFullFloat         --Good catch all for full screen video, smartBorders is also used on the layoutHook
     ] where role = stringProperty "WM_WINDOW_ROLE"
 
------------------------------------------
---Layouts & Workspaces working together--
------------------------------------------
-myLayoutHook    = onWorkspace "dashboard" fullLayout $
-                  onWorkspace "terminal"  layoutTerm $
-                  onWorkspace "web"       layoutWeb $
-                  onWorkspace "im"        layoutIM $
-                  layoutDefault
-
--------------------
----Layout Control--
--------------------
-layoutTerm      = comboTabed ||| tabbedLayout ||| tiledLayout ||| mosaicLayout
-layoutWeb       = fullLayout ||| tiledLayout
-layoutIM        = fullLayout ||| mosaicLayout ||| imLayout
-layoutDefault   = tabbedLayout ||| mosaicLayout ||| fullLayout
-
-----------------------
---Customized Layouts--
-----------------------
-fullLayout      = noBorders Full
-tiledLayout     = Tall 1 (1/50) (1/2)
-mosaicLayout    = MosaicAlt M.empty
-tabbedLayout    = tabbed shrinkText defaultTheme
-comboTabed      = combineTwo tiledLayout tabbedLayout tabbedLayout
-imLayout        = gridIM (1%7) (ClassName "Pidgin")  --Make Buddy List stay on right
-
 --------------------------------
 --Log Hook (aka. dzen2 output)--
 --------------------------------
+xmLogHook :: Handle -> PP
 xmLogHook pipe = xmobarPP
   { ppOutput          = hPutStrLn pipe
   , ppCurrent         = xmobarColor "green" "" . pad . myWSabbrev
@@ -232,32 +247,42 @@ xmLogHook pipe = xmobarPP
                           "Tall"        -> "‣ Ψ"
                           "Mirror Tall" -> "‣ Ξ"
                           "Full"        -> "‣ Ο"
-                          "MosaicAlt"   -> "‣ Ϡ"
                           "Tabbed Simplest" -> "‣ τ"
                           "combining Tabbed Simplest and Tabbed Simplest with Tall" -> "‣ Φ"
                           _             -> "‣ " ++ x
                         )
   , ppTitle           = wrap " |" "" . dzenEscape . pad
   }
----------------------
---The actual config--
----------------------
-main = do
-    host            <- hostname
-    homeDir         <- getHomeDirectory
-    xmPipe          <- spawnPipe $ myXmobar host
-    -- dzenStatusBar   <- spawnPipe $ myStatusDzen host
-    -- conkyStatusBar  <- spawnPipe $ myStatusConky host
-    -- startupApps
-    xmonad $ withUrgencyHook NoUrgencyHook $ defaultConfig
-        {
-          terminal        = myTerminal
-        , modMask         = myModKey host
-        , workspaces      = myWorkspaces
-        , keys            = myKeys host homeDir
-        , layoutHook      = avoidStruts $ smartBorders $ windowNavigation myLayoutHook     -- smartBorders removes borders if only one window or a fullscreen floating window is up
-        , manageHook      = myManageHook <+> manageDocks
-        , handleEventHook = docksEventHook
-        , logHook         = dynamicLogWithPP $ xmLogHook xmPipe
-        , startupHook     = return () >> startupApps
-        }
+
+--------------------------
+--Mouse Position Updater--
+--------------------------
+mousePosUpdate = let center = (0.5, 0.5)
+                     nearestCorner = (0.9, 0.9)
+                 in updatePointer center nearestCorner
+
+--------------------
+--Helper Functions--
+--------------------
+hostname :: IO String
+hostname = nodeName <$> getSystemID
+
+--------------------------
+--Host Specific Settings--
+--------------------------
+type Host = String
+myModKey :: Host -> KeyMask
+myModKey h
+  | h == "darknut" = mod1Mask
+  | h == "bari"    = mod1Mask
+  | otherwise      = mod1Mask
+
+statusFont :: Host -> String
+statusFont h
+  | h == "darknut" = "xft:dejavu serif-9"
+  | h == "bari"    = "xft:dejavu serif-5"
+  | otherwise      = "xft:dejavu serif-9"
+
+myXmobar :: Host -> String
+myXmobar h = "xmobar -f \"" ++ statusFont h ++ "\""
+
