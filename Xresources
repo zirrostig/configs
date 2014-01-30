@@ -75,7 +75,7 @@ URxvt.buffered:             true
 URxvt.transparent:          true
 URxvt.shading:              15
 URxvt.blurRadius:           5
-URxvt.cursorBlink:          true
+URxvt.cursorBlink:          false
 URxvt.pointerBlank:         true
 
 !Perl Extension Stuff
