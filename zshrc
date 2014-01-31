@@ -372,11 +372,15 @@ PS2="%_ > "
 PS4="%_ %i>> "
 
 ###############################################################################
-# Zsh Completion Stuff
+# Zsh Completion Stuff (mostly zstyles)
 ###############################################################################
+
+#Always menu
+zstyle ':completion:*:*:*:*:*' menu select
 
 #Auto rehashing
 zstyle ":completion:*" rehash yes
+
 
 #SSH config hosts
 if [ -f ~/.ssh/known_hosts ]; then
@@ -390,6 +394,8 @@ if [ "$hosts" ]; then
 fi
 
 #Fuzzy Files
+FUZZIGNOREDIRS=('_darcs' '.darcs' '.git' 'dist' '.cabal' '.local' '.sparkleshare' '.vim/bundle' '.config' '.neocomplete' '.mozilla' '.vimlocal' '.crawl' '.cache')
+FUZZIGNOREEXTS=('hi' 'o' 'aux')
 zle -C fuzzy menu-expand-or-complete fuzzy-files
 bindkey '^[t' fuzzy
 function fuzzy-files {
@@ -398,9 +404,35 @@ function fuzzy-files {
     else
         fuzzdir=.
     fi
+
+    prunedirs=$(
+        for d in $FUZZIGNOREDIRS; do
+            echo -n " -path '*/${d}' -prune -o"
+        done
+    )
+    ignoreexts=$(
+        for ext in $FUZZIGNOREEXTS; do
+            echo -n "-a ! -iname '*.${ext}' "
+        done
+    )
+
     fuzzpat=${PREFIX##*/}
-    compadd -U $(find ${fuzzdir} | matcher "${fuzzpat}")
+    # echo "\nfind $fuzzdir $prunedirs -type f $ignoreexts"
+    compadd -U $(eval "find ${fuzzdir} ${prunedirs} -type f ${ignoreexts}" | matcher "${fuzzpat}")
 }
+
+#Completion menu with color
+zmodload zsh/complist
+export ZLSCOLORS="${LS_COLORS}"
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}" "ma=${${use_256color+1;7;38;5;143}:-1;7;33}"
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+
+#Kill zstyles completion
+zstyle ':completion:*:*:kill:*' menu yes select
+zstyle ':completion:*:*:killall:*' menu yes select
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
+zstyle ':completion:*:*:*:*:processes' command "ps -u `whoami` -o pid,user,comm -w -w"
 
 ###############################################################################
 # ZSH SYNTAX HIGHLIGHT
