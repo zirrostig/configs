@@ -2,8 +2,8 @@
 ! ColorScheme and font for xterm and urxvt
 
 !Actually used
-URxvt.font:     xft:Inconsolata-7
-URxvt.boldFont: xft:Inconsolata-7:bold
+URxvt.font:     xft:Inconsolatazi4-8
+URxvt.boldFont: xft:Inconsolatazi4-8:bold
 
 !XTerm.font:     -zevv-peep-*-*-*-*-16-*-*-*-*-*-*-*
 ! !Disable bold font
