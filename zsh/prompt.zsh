@@ -112,11 +112,12 @@ function setprompt() {
     infoline+="%4/${reset}"     #Current Directory (out to 4 directories)- $4/
 
     #VimMode
-    if [[ "$KEYMAP" == "vicmd" ]]; then
-        vimd='[N]'
-    else
-        vimd='[I]'
-    fi
+    case $KEYMAP in
+        vicmd) print -rn -- $terminfo[civis];
+               vimd='[N]';;
+            *) print -rn -- $terminfo[cnorm];
+               vimd='[I]';;
+    esac
 
     #This is awesome
     #Makes dungeon
@@ -150,19 +151,25 @@ function setprompt() {
 venv_rprompt() {
     local line nextdir
 
-    #Add first element on the directory stack to the prompt
-    #Get the next element on the directory stack
-    nextdir=${(w)dirstack[1]}
-    nextdir=${nextdir/$HOME/\~}         #Replace /home/user with '~'
-    line="${cyan}${nextdir}${reset}"
+    #Get battery level
+    local bat bat_full bat_pcent
+    typeset -F bat bat_full bat_pcent
+    bat_full=$(cat /sys/class/power_supply/BAT0/charge_full_design)
+    bat=$(cat /sys/class/power_supply/BAT0/charge_now)
+    bat_pcent=$(( ($bat / $bat_full) * 100 ))
 
-    #If we're in a virtual environment, make it known
-    if [[ -n $VIRTUAL_ENV ]]; then
-        line+="${red}venv:$(basename $VIRTUAL_ENV)${reset}"
-    fi
+    line=$(printf "%0.0f%%%%" $bat_pcent)
 
-#    #Add Time Since EPOCH in seconds
-#    line+=" ${cyan}$EPOCHSECONDS${reset}"
+    # #Add first element on the directory stack to the prompt
+    # #Get the next element on the directory stack
+    # nextdir=${(w)dirstack[1]}
+    # nextdir=${nextdir/$HOME/\~}         #Replace /home/user with '~'
+    # lines+="${cyan}${nextdir}${reset}"
+
+    # #If we're in a virtual environment, make it known
+    # if [[ -n $VIRTUAL_ENV ]]; then
+    #     lines+="${red}venv:$(basename $VIRTUAL_ENV)${reset}"
+    # fi
 
     RPROMPT=$line
 }

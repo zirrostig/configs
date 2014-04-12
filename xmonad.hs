@@ -3,7 +3,7 @@ import XMonad
 import XMonad.Actions.ConstrainedResize as Sqr
 import XMonad.Actions.CycleWS
 import XMonad.Actions.DwmPromote
-import XMonad.Actions.UpdatePointer
+-- import XMonad.Actions.UpdatePointer
 
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
@@ -52,14 +52,14 @@ main = do
         , layoutHook      = myLayoutHook
         , manageHook      = myManageHook <+> manageDocks
         , handleEventHook = docksEventHook
-        , logHook         = (dynamicLogWithPP $ xmLogHook xmPipe) >> mousePosUpdate
+        , logHook         = (dynamicLogWithPP $ xmLogHook xmPipe) -- >> mousePosUpdate
         , startupHook     = myStartupHook
         }
 
 myStartupHook :: X()
 myStartupHook = do
   setWMName "LG3D"
-  safeSpawnProg "/usr/bin/urxvtd"
+  -- safeSpawnProg "/usr/bin/urxvtd" -- No longer used as urxvtd is started by systemd for my user session
 
 myMouse :: Host -> XConfig Layout -> M.Map (KeyMask, Button) (Window -> X ())
 myMouse host _conf = M.fromList
@@ -85,9 +85,9 @@ myKeys host conf = M.fromList $ [
           , ((modKey                , xK_b                     ), sendMessage ToggleStruts                       )  -- Hide Status Bars
           --Media-Keys
           -- Should really set these at a system level
-          , ((0                     , 0x1008FF11               ), spawn "pamixer --decrease 5"                   )  -- Volume Down
-          , ((0                     , 0x1008FF13               ), spawn "pamixer --increase 5"                   )  -- Volume Up
-          , ((0                     , 0x1008FF12               ), spawn "pamixer --toggle-mute"                  )  -- Mute Volume
+          , ((0                     , 0x1008FF11               ), spawn "ponymix decrease 5"                     )  -- Volume Down
+          , ((0                     , 0x1008FF13               ), spawn "ponymix increase 5"                     )  -- Volume Up
+          , ((0                     , 0x1008FF12               ), spawn "ponymix toggle"                         )  -- Mute Volume
           , ((0                     , 0x1008FF02               ), spawn "xbacklight +10%"                        )  -- Brightness Up
           , ((0                     , 0x1008FF03               ), spawn "xbacklight -10%"                        )  -- Brightness Down
           --Window/Workspace Management
@@ -117,7 +117,7 @@ myKeys host conf = M.fromList $ [
           , ((modKey                , xK_x                     ), sendMessage $ Toggle MIRROR                    )  -- Mirrors Layout
           , ((modKey                , xK_f                     ), sendMessage $ Toggle NBFULL                    )  -- Temp. Full Screen current window
           --Lock Computer
-          , ((modKey   .|. shiftMask, xK_z                     ), spawn "slimlock"                               )  -- Locks screen with slimlock
+          , ((modKey   .|. shiftMask, xK_z                     ), spawn "physlock -s"                               )  -- Locks screen with slimlock
           --Restarting/Closing XMonad
           , ((modKey   .|. shiftMask, xK_apostrophe            ), io exitSuccess                                 )  -- Quits XMonad
           , ((modKey                , xK_apostrophe            ), spawn "xmonad --recompile; xmonad --restart"   )  -- Restarts XMonad
@@ -257,9 +257,9 @@ xmLogHook pipe = xmobarPP
 --------------------------
 --Mouse Position Updater--
 --------------------------
-mousePosUpdate = let center = (0.5, 0.5)
-                     nearestCorner = (0.9, 0.9)
-                 in updatePointer center nearestCorner
+-- mousePosUpdate = let center = (0.5, 0.5)
+--                      nearestCorner = (0.9, 0.9)
+--                  in updatePointer center nearestCorner
 
 --------------------
 --Helper Functions--
@@ -271,10 +271,12 @@ hostname = nodeName <$> getSystemID
 --Host Specific Settings--
 --------------------------
 type Host = String
+-- Used to be when I had a Mac. since super/meta where in switched positions from my other machines.
+-- Now it is not as important, but kept incase I decide to change config massively.
 myModKey :: Host -> KeyMask
 myModKey h
-  | h == "darknut" = mod1Mask
-  | h == "bari"    = mod1Mask
+  | h == "darknut" = mod4Mask
+  | h == "bari"    = mod4Mask
   | otherwise      = mod1Mask
 
 statusFont :: Host -> String

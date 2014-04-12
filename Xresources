@@ -2,8 +2,10 @@
 ! ColorScheme and font for xterm and urxvt
 
 !Actually used
-URxvt.font:     xft:Inconsolatazi4-8
-URxvt.boldFont: xft:Inconsolatazi4-8:bold
+URxvt.font:     xft:Inconsolatazi4-6
+URxvt.boldFont: xft:Inconsolatazi4-6:bold
+/* URxvt.font:     xft:Inconsolata-8 */
+/* URxvt.boldFont: xft:Inconsolata-8:bold */
 
 !XTerm.font:     -zevv-peep-*-*-*-*-16-*-*-*-*-*-*-*
 ! !Disable bold font
@@ -21,39 +23,44 @@ URxvt.boldFont: xft:Inconsolatazi4-8:bold
 #define t_selection #373B41
 #define t_foreground #C5C8C6
 #define t_comment #707880
+#define t_darkred #A54242
 #define t_red #CC6666
+#define t_darkgreen #8C9440
+#define t_green #B5BD68
 #define t_orange #DE935F
 #define t_yellow #F0C674
-#define t_green #B5BD68
-#define t_aqua #8ABEB7
+#define t_darkblue #5F819D
 #define t_blue #81A2BE
-#define t_purple #B294BB
+#define t_magenta #B294BB
+#define t_purple #85678F
+#define t_aqua #5E8D87
+#define t_cyan #8ABEB7
 
 *background: t_background
 *foreground: t_foreground
 ! black
-*color0: t_current_line
-*color8: t_selection
+*color0:  t_current_line
+*color8:  t_selection
 ! red
-*color1: #A54242
-*color9: t_red
+*color1:  t_darkred
+*color9:  t_red
 ! green
-*color2: #8C9440
+*color2:  t_darkgreen
 *color10: t_green
 ! yellow
-*color3: t_orange
+*color3:  t_orange
 *color11: t_yellow
 ! blue
-*color4: #5F819D
+*color4:  t_darkblue
 *color12: t_blue
 ! magenta
-*color5: #85678F
-*color13: t_purple
+*color5:  t_purple
+*color13: t_magenta
 ! cyan
-*color6: #5E8D87
-*color14: t_aqua
+*color6:  t_aqua
+*color14: t_cyan
 ! white
-*color7: t_comment
+*color7:  t_comment
 *color15: t_foreground
 
 !------------------------------------------------------------------------------

@@ -1,0 +1,8 @@
+hi FontFixed -a font: 14px "Inconsolatazi4" !important;
+hi -append -link FontFixed TabText
+hi -append -link FontFixed TabNumber
+hi -append -link FontFixed TabIconNumber
+hi -append -link FontFixed TabIcon
+
+nnoremap < gT
+nnoremap > gt

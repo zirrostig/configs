@@ -2,13 +2,17 @@
 ### All Knowing, All Useful Website
 ###  http://zsh.sourceforge.net/Doc/
 ################################################################################
-source $HOME/.zsh/options.zsh
-source $HOME/.zsh/modules.zsh
-source $HOME/.zsh/commands.zsh
-source $HOME/.zsh/zstyles.zsh
-source $HOME/.zsh/functions.zsh
-source $HOME/.zsh/prompt.zsh
-source $HOME/.zsh/syntax-hilite.zsh
+
+for f in $HOME/.zsh/*; do
+    source $f
+done
+# source $HOME/.zsh/options.zsh
+# source $HOME/.zsh/modules.zsh
+# source $HOME/.zsh/commands.zsh
+# source $HOME/.zsh/zstyles.zsh
+# source $HOME/.zsh/functions.zsh
+# source $HOME/.zsh/prompt.zsh
+# source $HOME/.zsh/syntax-hilite.zsh
 
 
 #####

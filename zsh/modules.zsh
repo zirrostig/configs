@@ -23,4 +23,3 @@ add-zsh-hook chpwd chpwd_recent_dirs
 zmodload zsh/pcre       #pcre_compile and pcre_match
 zmodload zsh/datetime
 zmodload zsh/mathfunc
-
