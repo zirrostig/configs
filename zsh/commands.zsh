@@ -23,10 +23,11 @@ alias la='ls -la'
 alias p=ls
 alias pl=ll
 alias pa=la
+alias hexedit='vim +Vinarise'
 alias allcolors='(x=`tput op` y=`printf %80s`;for i in {0..255};do o=00$i;echo -e ${o:${#o}-3:3} `tput setaf $i;tput setab $i`${y// /=}$x;done)'
 alias connectToSimon='ssh -Nfq -L 2676:simon.mines.edu:22 zstigall@imagine.mines.edu'
 if [[ "$TERM" != "linux" ]]; then
     alias killFlash='~/.killFlash.sh'
     alias makeJavaWindowsWork='wmname LG3D'
-    alias vim=gvim
+    # alias vim=gvim
 fi

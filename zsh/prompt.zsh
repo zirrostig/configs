@@ -149,16 +149,16 @@ function setprompt() {
 }
 
 venv_rprompt() {
-    local line nextdir
+    # local line nextdir
 
-    #Get battery level
-    local bat bat_full bat_pcent
-    typeset -F bat bat_full bat_pcent
-    bat_full=$(cat /sys/class/power_supply/BAT0/charge_full_design)
-    bat=$(cat /sys/class/power_supply/BAT0/charge_now)
-    bat_pcent=$(( ($bat / $bat_full) * 100 ))
+    # #Get battery level
+    # local bat bat_full bat_pcent
+    # typeset -F bat bat_full bat_pcent
+    # bat_full=$(cat /sys/class/power_supply/BAT0/charge_full_design)
+    # bat=$(cat /sys/class/power_supply/BAT0/charge_now)
+    # bat_pcent=$(( ($bat / $bat_full) * 100 ))
 
-    line=$(printf "%0.0f%%%%" $bat_pcent)
+    # line=$(printf "%0.0f%%%%" $bat_pcent)
 
     # #Add first element on the directory stack to the prompt
     # #Get the next element on the directory stack
@@ -171,7 +171,7 @@ venv_rprompt() {
     #     lines+="${red}venv:$(basename $VIRTUAL_ENV)${reset}"
     # fi
 
-    RPROMPT=$line
+    RPROMPT=
 }
 
 #(R)Prompt is set in precmd()
