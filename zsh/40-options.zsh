@@ -6,7 +6,7 @@
 setopt DVORAK               #Dvorak keymap is used for smart spelling correction
 setopt C_BASES              #Output hex as 0x... rather than 16#...
 setopt C_PRECEDENCES        #Change order of opts to be more c like
-#setopt INTERACTIVE_COMMENTS #Allows comments in the shell
+# setopt INTERACTIVE_COMMENTS #Allows comments in the shell
 unsetopt BEEP               #No Annoying beep
 setopt MULTIOS              #Allows multiple io redirects
 
@@ -25,7 +25,7 @@ setopt BAD_PATTERN
 setopt CASE_MATCH
 setopt NOMATCH
 setopt NUMERIC_GLOB_SORT
-setopt REMATCH_PCRE         #Perl-Style Regex :)
+# setopt REMATCH_PCRE         #Perl-Style Regex :)
 setopt EXTENDED_GLOB
 setopt EQUALS               # =exe expands to `which exe`
 autoload -U compinit && compinit
@@ -56,8 +56,8 @@ export READNULLCMD="less"
 ################################################################################
 # Less Pipe
 ################################################################################
-# export LESSOPEN="| /usr/bin/src-hilite-lesspipe.sh %s"
-export LESSOPEN='|/usr/bin/lesspipe.sh %s'
+export LESSOPEN="| source-highlight-esc.sh %s"
+# export LESSOPEN='|/usr/bin/lesspipe.sh %s'
 export LESS=" -R "
 
 ###############################################################################

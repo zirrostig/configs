@@ -1,8 +1,11 @@
-#!/bin/bash
+#!/bin/zsh
 
 #Shuffles Backgrounds
-backgroundsDir=~/mm/pic/wallpapers
+backgroundsDir=${HOME}/mm/pic/wallpapers
+atmDir=${HOME}/atm
 delay=120s
+edgeEffects=(edge dither random)
+resolution=1920x1080
 
 usr1() {
     trap 'exit 0' TERM
@@ -10,9 +13,12 @@ usr1() {
 }
 
 shufflenext() {
-    pic=$(find $backgroundsDir -type f \( -name '*.jpg' -o -name '*.png' \) -print0 | shuf -n1 -z )
-    feh --bg-max $pic
-    echo $pic > ~/atm/wallpaper
+    wallpapers=( $backgroundsDir/*.{png,jpg} )
+    pic=$wallpapers[$RANDOM%$#wallpapers+1]
+    effect=$edgeEffects[$RANDOM%$#edgeEffects+1]
+    rm $atmDir/wallpaper
+    wallpaperNorm $pic $atmDir/wallpaper $resolution $effect
+    feh --bg-max $atmDir/wallpaper
     sleep $delay & WAITPID=$!
 }
 

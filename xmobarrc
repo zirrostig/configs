@@ -1,4 +1,4 @@
-Config  { font          = "xft:DejaVu Serif-9"
+Config  { font          = "xft:DejaVu Serif-7"
         , bgColor       = "black"
         , fgColor       = "white"
         , position      = Top

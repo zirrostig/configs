@@ -43,6 +43,7 @@ main = do
     xmPipe          <- spawnPipe $ myXmobar host
     -- dzenStatusBar   <- spawnPipe $ myStatusDzen host
     -- conkyStatusBar  <- spawnPipe $ myStatusConky host
+    safeSpawn "urxvtd" []
     xmonad $ withUrgencyHook NoUrgencyHook $ defaultConfig
         { modMask         = myModKey host
         , terminal        = "urxvtc"
@@ -117,7 +118,7 @@ myKeys host conf = M.fromList $ [
           , ((modKey                , xK_x                     ), sendMessage $ Toggle MIRROR                    )  -- Mirrors Layout
           , ((modKey                , xK_f                     ), sendMessage $ Toggle NBFULL                    )  -- Temp. Full Screen current window
           --Lock Computer
-          , ((modKey   .|. shiftMask, xK_z                     ), spawn "physlock -s"                               )  -- Locks screen with slimlock
+          , ((modKey   .|. shiftMask, xK_z                     ), spawn "i3lock -i /home/zirro/atm/wallpaper -z" )  -- Locks screen with slimlock
           --Restarting/Closing XMonad
           , ((modKey   .|. shiftMask, xK_apostrophe            ), io exitSuccess                                 )  -- Quits XMonad
           , ((modKey                , xK_apostrophe            ), spawn "xmonad --recompile; xmonad --restart"   )  -- Restarts XMonad
@@ -282,7 +283,7 @@ myModKey h
 statusFont :: Host -> String
 statusFont h
   | h == "darknut" = "xft:dejavu serif-9"
-  | h == "bari"    = "xft:dejavu serif-5"
+  | h == "bari"    = "xft:dejavu serif-7"
   | otherwise      = "xft:dejavu serif-9"
 
 myXmobar :: Host -> String

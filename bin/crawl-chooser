@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# trap '' SIGINT
+while :; do
+    clear
+    echo "---------------------------------"
+    echo "             CRAWL"
+    echo "---------------------------------"
+    echo "1. DynaHack"
+    echo "2. NetHack"
+    echo "3. Stone Soup"
+    echo "4. Rogue"
+    echo "5. BRogue"
+    echo "---------------------------------"
+    read -r -p "Enter your choice [1-5] : " c
+    case $c in
+    1) dynahack;;
+    2) nethack;;
+    3) crawl;;
+    4) rogue;;
+    5) brogue;;
+    esac
+done
+# trap -- SIGINT

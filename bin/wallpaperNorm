@@ -1,0 +1,41 @@
+#!/usr/bin/zsh
+
+if [[ $# -lt 2 && $# -gt 4 ]]; then
+    echo 'usage: wallpaperNorm input output geometry virtual-pixel'
+fi
+
+# Virtual pixel should be one of the following
+# edge, dither, mirror, random, (some other stuff I don't care about
+
+# Desired geometry
+geometry=${3:-1920x1080}
+geoWidth=${geometry%x*}
+geoHeight=${geometry#*x}
+
+# VPixel Setting
+vpixel=${4:-edge}
+
+
+# First scale down to desired size if too large
+convert $1 -resize "${geometry}>" $2
+
+# Geometry of given image
+dim=$(identify $2 | awk '{print $3}')
+width=${dim%x*}
+height=${dim#*x}
+
+# +1 and -1 are to slightly shrink the area, removing strange artifacts
+(( viewWidth = ( ( geoWidth - width ) / 2 ) + 1 ))
+(( viewHeight = ( ( geoHeight - height ) / 2 ) + 1 ))
+(( maskWidth = viewWidth + width - 1))
+(( maskHeight = viewHeight + height - 1))
+
+view="${geometry}-${viewWidth}-${viewHeight}"
+
+#create a temporary mask
+convert -size $geometry xc:black -fill white \
+    -draw "rectangle $viewWidth,$viewHeight $maskWidth,$maskHeight" /tmp/mask.png
+
+# Apply basic filter to extend edges to fill void, blur the extension
+convert $2 -define distort:viewport=$view -virtual-pixel $vpixel -filter point \
+    -distort SRT 0 +repage -mask /tmp/mask.png -blur 0x8 +mask $2
