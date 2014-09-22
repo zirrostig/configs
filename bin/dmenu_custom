@@ -1,21 +1,36 @@
-#!/bin/bash
+#!/bin/zsh
 cachedir=${XDG_CACHE_HOME:-"$HOME/.cache"}
 if [ -d "$cachedir" ]; then
-	cache=$cachedir/dmenu_run
+    cache=$cachedir/dmenu_run
 else
-	cache=$HOME/.dmenu_cache # if no xdg dir, fall back to dotfile in ~
+    cache=$HOME/.dmenu_cache # if no xdg dir, fall back to dotfile in ~
 fi
-(
-	IFS=:
-	if stest -dqr -n "$cache" $PATH; then
-		stest -flx $PATH | sort -u | tee "$cache" | dmenu "$@"
-	else
-		dmenu "$@" < "$cache"
-	fi
-) | awk -f <(sed -e '0,/^#!.*awk/d' $0) | ${SHELL:-"/bin/sh"} &
+
+cat <(
+    IFS=:
+    if stest -dqr -n "$cache" $PATH; then
+        stest -flx $PATH | sort -u | tee "$cache"
+    else
+        cat "$cache"
+    fi
+) <( # Completion for '/' prefix is the same as regular commands
+    for cmd in $(
+        IFS=:
+        if stest -dqr -n "$cache" $PATH; then
+            stest -flx $PATH | sort -u | tee "$cache"
+        else
+            cat "$cache"
+        fi
+    ); echo "/$cmd"
+) <( # Completion for '>' is al files in .screenlayout removing. sh extension
+    for f in $HOME/.screenlayout/*; echo ">${${f##*/}%%.*}"
+) | dmenu "$@" | awk -f <(sed -e '0,/^#!.*awk/d' $0) | ${SHELL:-"/bin/sh"} &
+# For Debugging
+# ) | dmenu "$@" | awk -f <(sed -e '0,/^#!.*awk/d' $0) | cat >>$HOME/.dmenu_custom_out &
 exit 0
 
 #!/usr/bin/awk -f
-/^\//   {sub(/^\//, "urxvtc -e ", $0)}
+/^\/\// {sub(/^\//, "urxvtc -cd ", $0)}
+/^\//   {sub(/^\//, "urxvtc -cd $HOME/", $0)}
 />/     {$0 = $0 ".sh"; sub(/>/, "/home/zirro/.screenlayout/")}
         {print}
