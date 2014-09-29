@@ -16,7 +16,7 @@ shufflenext() {
     wallpapers=( $backgroundsDir/*.{png,jpg} )
     pic=$wallpapers[$RANDOM%$#wallpapers+1]
     effect=$edgeEffects[$RANDOM%$#edgeEffects+1]
-    rm $atmDir/wallpaper
+    rm $atmDir/wallpaper.png
     wallpaperNorm $pic $atmDir/wallpaper $resolution $effect
     feh --bg-max $atmDir/wallpaper
     sleep $delay & WAITPID=$!

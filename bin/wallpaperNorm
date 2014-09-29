@@ -17,7 +17,7 @@ vpixel=${4:-edge}
 
 
 # First scale down to desired size if too large
-convert $1 -resize "${geometry}>" $2
+convert $1 -resize "${geometry}>" png:$2
 
 # Geometry of given image
 dim=$(identify $2 | awk '{print $3}')
@@ -38,4 +38,4 @@ convert -size $geometry xc:black -fill white \
 
 # Apply basic filter to extend edges to fill void, blur the extension
 convert $2 -define distort:viewport=$view -virtual-pixel $vpixel -filter point \
-    -distort SRT 0 +repage -mask /tmp/mask.png -blur 0x8 +mask $2
+    -distort SRT 0 +repage -mask /tmp/mask.png -blur 0x8 +mask png:$2

@@ -47,8 +47,13 @@ msg_max_height = 20
 #mlist_targetting = true
 
 #Window Settings
-#tile_full_screen = true
-#tile_window_width = 1900
-#tile_window_height = 1000
-#tile_map_pixels = 3
-#tile_layout_priority = minimap, gold_turn, command, spell, monster
+# tile_full_screen = true
+# tile_window_width = 1900
+# tile_window_height = 1000
+tile_map_pixels = 3
+tile_layout_priority = minimap, gold_turn, command, spell, monster
+
+# Battlesphere Interupt
+runrest_stop_message += Your battlesphere wavers and loses cohesion.
+runrest_stop_message += You feel your bond with your battlesphere wane.
+

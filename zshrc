@@ -10,4 +10,3 @@ done
 if [[ -o login ]]; then
     systemctl --user import-environment PATH
 fi
-

@@ -6,6 +6,7 @@ import XMonad.Actions.DwmPromote
 -- import XMonad.Actions.UpdatePointer
 
 import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.SetWMName
@@ -44,16 +45,16 @@ main = do
     -- dzenStatusBar   <- spawnPipe $ myStatusDzen host
     -- conkyStatusBar  <- spawnPipe $ myStatusConky host
     safeSpawn "urxvtd" []
-    xmonad $ withUrgencyHook NoUrgencyHook $ defaultConfig
+    xmonad $ withUrgencyHook NoUrgencyHook $ ewmh defaultConfig
         { modMask         = myModKey host
         , terminal        = "urxvtc"
         , workspaces      = myWorkspaces
         , keys            = myKeys host
         , mouseBindings   = myMouse host
         , layoutHook      = myLayoutHook
-        , manageHook      = myManageHook <+> manageDocks
+        , manageHook      = myManageHook
         , handleEventHook = docksEventHook
-        , logHook         = (dynamicLogWithPP $ xmLogHook xmPipe) -- >> mousePosUpdate
+        , logHook         = dynamicLogWithPP $ xmLogHook xmPipe -- >> mousePosUpdate
         , startupHook     = myStartupHook
         }
 
@@ -118,7 +119,7 @@ myKeys host conf = M.fromList $ [
           , ((modKey                , xK_x                     ), sendMessage $ Toggle MIRROR                    )  -- Mirrors Layout
           , ((modKey                , xK_f                     ), sendMessage $ Toggle NBFULL                    )  -- Temp. Full Screen current window
           --Lock Computer
-          , ((modKey   .|. shiftMask, xK_z                     ), spawn "i3lock -i /home/zirro/atm/wallpaper -z" )  -- Locks screen with slimlock
+          , ((modKey   .|. shiftMask, xK_z                     ), spawn "xautolock -locknow"                    )  -- Locks screen 
           --Restarting/Closing XMonad
           , ((modKey   .|. shiftMask, xK_apostrophe            ), io exitSuccess                                 )  -- Quits XMonad
           , ((modKey                , xK_apostrophe            ), spawn "xmonad --recompile; xmonad --restart"   )  -- Restarts XMonad
@@ -210,7 +211,10 @@ msgLayout       = gridIM (1%7) (ClassName "Pidgin")  --Make Buddy List stay on r
 q ^? x = (L.isPrefixOf x) <$> q
 
 myManageHook :: XMonad.Query (MN.Endo WindowSet)
-myManageHook    = composeAll
+myManageHook = perApplicationHook <+> manageDocks
+
+perApplicationHook :: XMonad.Query (MN.Endo WindowSet)
+perApplicationHook = composeAll
     [ className =? "Firefox"            --> doShift "web"
     , className =? "Chromium"           --> doShift "web"
     , className =? "Pidgin"             --> doShift "messaging"
