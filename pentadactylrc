@@ -8,3 +8,6 @@ nmap -builtin < gT
 nmap -builtin > gt
 
 set showtabline='never'
+
+
+

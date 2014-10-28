@@ -182,16 +182,18 @@ myLayoutsPerWS = onWorkspace "dashboard" fullLayout
                $ onWorkspace "terminal"  layoutTerm
                $ onWorkspace "web"       layoutWeb
                $ onWorkspace "messaging" layoutMsg
+               $ onWorkspace "temporary" layoutTemp
                $ layoutDefault -- All other workspaces
 
 -------------------
 ---Layout Control--
 -------------------
 --Type Sigs are crazy long
+layoutDefault   = tabbedLayout ||| tiledLayout
 layoutTerm      = tiledLayout ||| comboTabed ||| tabbedLayout
-layoutWeb       = tiledLayout
+layoutWeb       = tiledLayout ||| tabbedLayout
 layoutMsg       = msgLayout ||| tabbedLayout
-layoutDefault   = tabbedLayout ||| fullLayout
+layoutTemp      = comboTabed ||| tabbedLayout ||| tiledLayout ||| msgLayout
 
 ----------------------
 --Customized Layouts--

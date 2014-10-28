@@ -4,8 +4,8 @@ remember_name = true
 use_old_selection_order = false
 
 #File Settings
-morgue_dir = .crawl/morgue/
-save_dir = .crawl/saves/
+morgue_dir = /home/zirro/.crawl/morgue/
+save_dir = /home/zirro/.crawl/saves/
 
 #Pickup/Drop
 autopickup = $?!\/%+=0
@@ -37,9 +37,8 @@ travel_delay = 35
 explore_stop = items,greedy_pickup,greedy_items,stairs,shops,altars,gates,artefacts,runes
 
 #Messages
-mp_warning = 10
+mp_warning = 15
 delay_message_clear = true
-show_inventory_weights = true
 show_gold_turns = true
 msg_min_height = 8
 msg_max_height = 20
@@ -51,7 +50,10 @@ msg_max_height = 20
 # tile_window_width = 1900
 # tile_window_height = 1000
 tile_map_pixels = 3
+tile_cell_pixels = 32
+tile_display_mode = hybrid
 tile_layout_priority = minimap, gold_turn, command, spell, monster
+tile_show_deamon_tier = true
 
 # Battlesphere Interupt
 runrest_stop_message += Your battlesphere wavers and loses cohesion.
