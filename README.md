@@ -13,6 +13,10 @@ ZSH
 ===
 If you're looking for my zsh config, I have moved it to [dotzsh](https://github.com/ZirroStig/dotzsh).
 
+EMACS
+===
+My emacs config can be found here - [emacsd](https://github.com/ZirroStig/emacsd).
+
 VIM
 ===
 Likewise my vim config can be found here - [dotvim](https://github.com/ZirroStig/dotvim).
