@@ -1,7 +1,13 @@
 #!/usr/bin/zsh
 
 if [[ $# -lt 2 && $# -gt 4 ]]; then
-    echo 'usage: wallpaperNorm input output geometry virtual-pixel'
+    echo 'usage: wallpaperNorm input output [geometry virtual-pixel]'
+    echo '\tgeometry should be in the form of XxY eg. 1920x1080'
+    echo '\tvirtual-pixel should be one of'
+    echo '\t\tedge'
+    echo '\t\tdither'
+    echo '\t\tmirror'
+    echo '\t\trandom'
 fi
 
 # Virtual pixel should be one of the following
