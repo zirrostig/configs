@@ -122,10 +122,10 @@ myKeys host conf = M.fromList $ [
           , ((modKey   .|. shiftMask, xK_Left                  ), sendMessage $ Swap L                           )
           , ((modKey   .|. shiftMask, xK_Up                    ), sendMessage $ Swap U                           )
           , ((modKey   .|. shiftMask, xK_Down                  ), sendMessage $ Swap D                           )
-          , ((modKey   .|. shiftMask, xK_j                     ), withFocused $ keysMoveWindow (0, -20)          )  -- Move focus to the next window
-          , ((modKey   .|. shiftMask, xK_k                     ), withFocused $ keysMoveWindow (0, 20)           )  -- Move focus to the previous window
-          , ((modKey   .|. shiftMask, xK_h                     ), withFocused $ keysMoveWindow (-20, 0)          )  -- Shrink the master area
-          , ((modKey   .|. shiftMask, xK_l                     ), withFocused $ keysMoveWindow (20, 0)           )  -- Expand the master area
+          , ((modKey   .|. shiftMask, xK_j                     ), withFocused $ keysMoveWindow (0, -20)          ) -- Move Window to float if necessary, and down
+          , ((modKey   .|. shiftMask, xK_k                     ), withFocused $ keysMoveWindow (0, 20)           ) -- Move Window to float if necessary, and up
+          , ((modKey   .|. shiftMask, xK_h                     ), withFocused $ keysMoveWindow (-20, 0)          ) -- Move Window to float if necessary, and left
+          , ((modKey   .|. shiftMask, xK_l                     ), withFocused $ keysMoveWindow (20, 0)           ) -- Move Window to float if necessary, and right
           , ((modKey                , xK_x                     ), sendMessage $ Toggle MIRROR                    )  -- Mirrors Layout
           , ((modKey                , xK_f                     ), sendMessage $ Toggle NBFULL                    )  -- Temp. Full Screen current window
           --Lock Computer
