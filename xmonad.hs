@@ -3,6 +3,7 @@ import XMonad
 import XMonad.Actions.ConstrainedResize as Sqr
 import XMonad.Actions.CycleWS
 import XMonad.Actions.DwmPromote
+import XMonad.Actions.FloatKeys
 -- import XMonad.Actions.UpdatePointer
 
 import XMonad.Hooks.DynamicLog
@@ -28,7 +29,9 @@ import System.Posix.Unistd
 import System.Exit (exitSuccess)
 
 import Control.Applicative ((<$>))
+import Control.Monad (unless)
 import Data.Ratio ((%))
+import Text.Printf
 
 import qualified Data.List as L
 import qualified Data.Map as M
@@ -81,8 +84,8 @@ myKeys host conf = M.fromList $ [
           , ((modKey                , xK_space                 ), sendMessage NextLayout                         )  -- Rotate through the available layout algorithms
           , ((modKey   .|. shiftMask, xK_space                 ), setLayout $ XMonad.layoutHook conf             )  -- Reset the layouts on the current workspace to default
           , ((modKey                , xK_r                     ), rescreen                                       )  -- Redraws the windows
-          , ((modKey                , xK_p                     ), spawn "dmenu_run"                              )  -- Toggle dmenu, application launcher
-          , ((modKey                , xK_y                     ), spawn "dmenu_custom"                           )  -- Customized dmenu with special commands
+          , ((modKey                , xK_p                     ), spawn "dmenu_custom"                           )  -- Customized dmenu with special commands
+          , ((modKey                , xK_y                     ), spawn "dmenu_run"                              )  -- Toggle dmenu, application launcher
           --Hiding of stuff
           , ((modKey                , xK_b                     ), sendMessage ToggleStruts                       )  -- Hide Status Bars
           --Media-Keys
@@ -92,6 +95,9 @@ myKeys host conf = M.fromList $ [
           , ((0                     , 0x1008FF12               ), spawn "ponymix toggle"                         )  -- Mute Volume
           , ((0                     , 0x1008FF02               ), spawn "xbacklight +10%"                        )  -- Brightness Up
           , ((0                     , 0x1008FF03               ), spawn "xbacklight -10%"                        )  -- Brightness Down
+          , ((0                     , 0x1008FF14               ), mpris "mopidy" MPRISPlayPause                  )  -- Play/Pause
+          , ((0                     , 0x1008FF16               ), mpris "mopidy" MPRISPrevious                   )  -- Play/Pause
+          , ((0                     , 0x1008FF17               ), mpris "mopidy" MPRISNext                       )  -- Play/Pause
           --Window/Workspace Management
           , ((modKey   .|. controlMask, xK_Left                ), prevWS                                         )  -- Move focused window to workspace to the left
           , ((modKey   .|. controlMask, xK_Right               ), nextWS                                         )  -- Move focused window to workspace to the right
@@ -116,10 +122,14 @@ myKeys host conf = M.fromList $ [
           , ((modKey   .|. shiftMask, xK_Left                  ), sendMessage $ Swap L                           )
           , ((modKey   .|. shiftMask, xK_Up                    ), sendMessage $ Swap U                           )
           , ((modKey   .|. shiftMask, xK_Down                  ), sendMessage $ Swap D                           )
+          , ((modKey   .|. shiftMask, xK_j                     ), withFocused $ keysMoveWindow (0, -20)          )  -- Move focus to the next window
+          , ((modKey   .|. shiftMask, xK_k                     ), withFocused $ keysMoveWindow (0, 20)           )  -- Move focus to the previous window
+          , ((modKey   .|. shiftMask, xK_h                     ), withFocused $ keysMoveWindow (-20, 0)          )  -- Shrink the master area
+          , ((modKey   .|. shiftMask, xK_l                     ), withFocused $ keysMoveWindow (20, 0)           )  -- Expand the master area
           , ((modKey                , xK_x                     ), sendMessage $ Toggle MIRROR                    )  -- Mirrors Layout
           , ((modKey                , xK_f                     ), sendMessage $ Toggle NBFULL                    )  -- Temp. Full Screen current window
           --Lock Computer
-          , ((modKey   .|. shiftMask, xK_z                     ), spawn "xautolock -locknow"                    )  -- Locks screen 
+          , ((modKey   .|. shiftMask, xK_z                     ), spawn "xautolock -locknow"                     )  -- Locks screen
           --Restarting/Closing XMonad
           , ((modKey   .|. shiftMask, xK_apostrophe            ), io exitSuccess                                 )  -- Quits XMonad
           , ((modKey                , xK_apostrophe            ), spawn "xmonad --recompile; xmonad --restart"   )  -- Restarts XMonad
@@ -191,7 +201,7 @@ myLayoutsPerWS = onWorkspace "dashboard" fullLayout
 --Type Sigs are crazy long
 layoutDefault   = tabbedLayout ||| tiledLayout
 layoutTerm      = tiledLayout ||| comboTabed ||| tabbedLayout
-layoutWeb       = tiledLayout ||| tabbedLayout
+layoutWeb       = tabbedLayout ||| tiledLayout
 layoutMsg       = msgLayout ||| tabbedLayout
 layoutTemp      = comboTabed ||| tabbedLayout ||| tiledLayout ||| msgLayout
 
@@ -218,7 +228,6 @@ myManageHook = perApplicationHook <+> manageDocks
 perApplicationHook :: XMonad.Query (MN.Endo WindowSet)
 perApplicationHook = composeAll
     [ className =? "Firefox"            --> doShift "web"
-    , className =? "Chromium"           --> doShift "web"
     , className =? "Pidgin"             --> doShift "messaging"
     , className =? "pidgin"             --> doShift "messaging"
     , className =? "Gimp"               --> doFloat             --Lets Gimp Windows Float by default
@@ -273,6 +282,21 @@ xmLogHook pipe = xmobarPP
 --------------------
 hostname :: IO String
 hostname = nodeName <$> getSystemID
+
+data MPRISAction = MPRISPlayPause | MPRISPause | MPRISPlay | MPRISNext | MPRISPrevious | MPRISStop
+
+mpris :: String -> MPRISAction -> X ()
+mpris player action = spawn $ L.intercalate " " ["dbus-send", "--print-reply", dest, obj_path, (iface_mem action)]
+  where dest     = printf "--dest=org.mpris.MediaPlayer2.%s" player
+        obj_path = "org/mpris/MediaPlayer2"
+        iface    = "org.mpris.MediaPlayer2.Player."
+        iface_mem MPRISPlayPause = iface ++ "PlayPause"
+        iface_mem MPRISPause     = iface ++ "Pause"
+        iface_mem MPRISPlay      = iface ++ "Play"
+        iface_mem MPRISNext      = iface ++ "Next"
+        iface_mem MPRISPrevious  = iface ++ "Previous"
+        iface_mem MPRISStop      = iface ++ "Stop"
+
 
 --------------------------
 --Host Specific Settings--
