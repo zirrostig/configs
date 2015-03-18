@@ -2,10 +2,10 @@
 ! ColorScheme and font for xterm and urxvt
 
 !Actually used
-URxvt.font:     xft:Inconsolatazi4-6
-URxvt.boldFont: xft:Inconsolatazi4-6:bold
-/* URxvt.font:     xft:Inconsolata-6 */
-/* URxvt.boldFont: xft:Inconsolata-6:bold */
+URxvt.font:     xft:Inconsolatazi4-10
+URxvt.boldFont: xft:Inconsolatazi4-10:bold
+/* URxvt.font:     xft:Inconsolata-10 */
+/* URxvt.boldFont: xft:Inconsolata-10:bold */
 
 !XTerm.font:     -zevv-peep-*-*-*-*-16-*-*-*-*-*-*-*
 ! !Disable bold font
@@ -18,7 +18,8 @@ URxvt.boldFont: xft:Inconsolatazi4-6:bold
 ! vim: ft=xdefaults
 
 ! Tomorrow-Night Palette
-#define t_background #1D1F21
+#define t_background_trans [85]#0D0F11
+#define t_background #0D0F11
 #define t_current_line #282A2E
 #define t_selection #373B41
 #define t_foreground #C5C8C6
@@ -36,7 +37,8 @@ URxvt.boldFont: xft:Inconsolatazi4-6:bold
 #define t_aqua #5E8D87
 #define t_cyan #8ABEB7
 
-*background: t_background
+*backgronud: t_background
+! URxvt*background: t_background_trans
 *foreground: t_foreground
 ! black
 *color0:  t_current_line
@@ -77,7 +79,7 @@ URxvt.saveLines:            60000
 URxvt.borderLess:           false
 URxvt.depth:                32
 URxvt.buffered:             true
-!URxvt.background is set below, and is using a transparency value
+!URxvt.background is set above, and is using a transparency value
 !These do not require compositing, (Native Transparency)
 URxvt.transparent:          true
 URxvt.shading:              15
@@ -109,7 +111,7 @@ URxvt.keysym.C-minus:        perl:font-size:decrease
 !-----------------------------------------------------------------------------
 ! Xft
 
-Xft.dpi:        165
+!Xft.dpi:        165
 Xft.autohint:   0
 Xft.lcdfilter:  lcddefault
 Xft.hintstyle:  hintfull
